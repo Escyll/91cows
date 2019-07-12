@@ -1,0 +1,6 @@
+project(GameService)
+
+add_subdirectory(CommunicationLib)
+add_subdirectory(GameService)
+add_subdirectory(FakeBotDetectionService)
+add_subdirectory(FakeBotClient)

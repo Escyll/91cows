@@ -1,0 +1,7 @@
+- breadboard
+- bluetooth module
+- arduino
+- 2x stepper motor
+- 2x motor driver
+- ArUco marker
+- 

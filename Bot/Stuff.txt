@@ -1,7 +1,7 @@
-- breadboard
-- bluetooth module
+- breadboard shield for arduino
+- bluetooth module HC-05
 - arduino
 - 2x stepper motor
 - 2x motor driver
 - ArUco marker
-- 
+-

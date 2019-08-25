@@ -1,1 +1,2 @@
+https://www.arduino.cc/en/Reference/softwareSerial
 https://github.com/tyhenry/CheapStepper

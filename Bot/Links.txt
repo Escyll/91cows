@@ -1,0 +1,14 @@
+Bluetooth Module:
+- https://www.instructables.com/id/Success-Using-the-JY-MCU-linvor-Bluetooth-Module/
+- https://www.teachmemicro.com/arduino-bluetooth/
+- https://www.instructables.com/id/Arduino-AND-Bluetooth-HC-05-Connecting-easily/
+- http://homepages.ihug.com.au/~npyner/Arduino/GUIDE_2BT.pdf
+
+Motor Control:
+- https://www.arduino.cc/en/Reference/Stepper
+- http://www.airspayce.com/mikem/arduino/AccelStepper/
+- https://www.makerguides.com/28byj-48-stepper-motor-arduino-tutorial/
+- 
+
+Powering Arduino:
+- https://www.technobyte.org/2016/07/power-up-the-arduino-uno/

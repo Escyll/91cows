@@ -13,6 +13,8 @@ class ArucoTracker(object):
 
     def __initialize_capture(self):
         self.__cap = cv2.VideoCapture(gc.g_source)
+        self.__cap.set(cv2.CAP_PROP_FRAME_WIDTH, gc.g_frame_width)
+        self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
                 gc.g_tracker_live_window, cv2.WINDOW_AUTOSIZE)
@@ -50,7 +52,6 @@ class ArucoTracker(object):
             if np.all(ids != None):
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(
                     corners, gc.g_marker_length_in_meters, self.__camera_matrix, self.__dist_matrix)
-
                 for i in range(0, ids.size):
                     cv2.aruco.drawAxis(frame, self.__camera_matrix, self.__dist_matrix,
                                        rvec[i], tvec[i], gc.g_marker_length_in_meters)

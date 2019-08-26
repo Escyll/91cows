@@ -8,3 +8,5 @@ g_calib_images_folder = "calib_images"
 g_calib_data_folder = "calib_data"
 g_calib_data_file_name = "camera_calibration.yaml"
 g_marker_length_in_meters = 0.1
+g_frame_width = 1920
+g_frame_height = 1080

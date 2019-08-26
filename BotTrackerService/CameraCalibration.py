@@ -15,6 +15,8 @@ class CameraCalibration(object):
     def __initialize_capture(self):
         if not self.__use_precaptured_images:
             self.__cap = cv2.VideoCapture(gc.g_source)
+            self.__cap.set(cv2.CAP_PROP_FRAME_WIDTH, gc.g_frame_width)
+            self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
             self.__preview_window = cv2.namedWindow(
                 gc.g_calibration_preview_window, cv2.WINDOW_AUTOSIZE)
 

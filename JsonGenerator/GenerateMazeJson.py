@@ -4,7 +4,7 @@ import random
 
 rows = 10
 columns = 10
-nTicks = 100
+nTicks = 2
 ticks = []
 for tick in range(nTicks):
     maze = []
@@ -13,7 +13,7 @@ for tick in range(nTicks):
         for x in range(columns):
             row.append({
                 "type": random.randint(0, 1),
-                "orientation": random.randint(0,3)
+                "orientation": random.randint(0,3) * 90
             })
         maze.append(row)
 

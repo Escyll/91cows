@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDataModel", "GameDataModel\GameDataModel.csproj", "{499D932A-AFB8-43B1-8D07-4B4FA81B6872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginsTest", "PluginsTest\PluginsTest.csproj", "{AE59AFD2-345F-4886-A1FE-51ED565D9C86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{499D932A-AFB8-43B1-8D07-4B4FA81B6872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{499D932A-AFB8-43B1-8D07-4B4FA81B6872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{499D932A-AFB8-43B1-8D07-4B4FA81B6872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE59AFD2-345F-4886-A1FE-51ED565D9C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE59AFD2-345F-4886-A1FE-51ED565D9C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE59AFD2-345F-4886-A1FE-51ED565D9C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE59AFD2-345F-4886-A1FE-51ED565D9C86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

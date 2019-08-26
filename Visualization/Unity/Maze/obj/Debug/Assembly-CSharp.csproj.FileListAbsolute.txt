@@ -269,3 +269,6 @@ C:\Projects\91cows\Visualization\Unity\Maze\obj\Debug\Assembly-CSharp.csproj.Cor
 C:\Projects\91cows\Visualization\Unity\Maze\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Projects\91cows\Visualization\Unity\Maze\obj\Debug\Assembly-CSharp.dll
 C:\Projects\91cows\Visualization\Unity\Maze\obj\Debug\Assembly-CSharp.pdb
+C:\Projects\91cows\Visualization\Unity\Maze\Temp\bin\Debug\GameDataModel.dll
+C:\Projects\91cows\Visualization\Unity\Maze\Temp\bin\Debug\Newtonsoft.Json.dll
+C:\Projects\91cows\Visualization\Unity\Maze\Temp\bin\Debug\GameDataModel.pdb

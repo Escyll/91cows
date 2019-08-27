@@ -39,6 +39,7 @@ public class LevelController : MonoBehaviour
 
     private void CreateMap(int mapWidth, int mapHeight)
     {
+        mCurrentMapSize = System.Drawing.Size.Empty;
         mGroundTilemap.ClearAllTiles();
         mGroundTilemap.size = new Vector3Int(mapWidth, mapHeight, 0);
 
@@ -94,43 +95,55 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    private System.Drawing.Size mCurrentMapSize = System.Drawing.Size.Empty;
 
     private void CreateMap(Model model)
     {
-        int mapWidth = (int)model.Columns;
-        int mapHeight = (int)model.Rows;
+        var mapSize = new System.Drawing.Size((int)model.Columns, (int)model.Rows);
+        bool mapSizeChanged = mapSize != mCurrentMapSize;
+        mCurrentMapSize = mapSize;
 
-        mGroundTilemap.ClearAllTiles();
-        mGroundTilemap.size = new Vector3Int(mapWidth, mapHeight, 0);
+        if (mapSizeChanged)
+        {
+            mGroundTilemap.ClearAllTiles();
+            mGroundTilemap.size = new Vector3Int(mapSize.Width, mapSize.Height, 0);
+        }
 
         mWallTilemap.ClearAllTiles();
-        mWallTilemap.size = new Vector3Int(mapWidth, mapHeight, 0);
+        mWallTilemap.size = new Vector3Int(mapSize.Width, mapSize.Height, 0);
 
         for (int row = 0; row < mGroundTilemap.size.y; ++row)
         {
             for (int col = 0; col < mGroundTilemap.size.x; ++col)
             {
-                mGroundTilemap.SetTile(new Vector3Int(col, row, 1), FloorTile);
+                if (mapSizeChanged)
+                {
+                    mGroundTilemap.SetTile(new Vector3Int(col, row, 1), FloorTile);
+                    mGroundTilemap.SetTransformMatrix(new Vector3Int(col, row, 1), GetRandomGroundTileOrientationMatrix());
+                }
                 mWallTilemap.SetTile(new Vector3Int(col, row, 1), GetWallTile(model.GroundTiles[row][col]));
                 mWallTilemap.SetTransformMatrix(new Vector3Int(col, row, 1), GetWallTileOrientationMatrix(model.GroundTiles[row][col]));
             }
         }
 
-        mGroundTilemap.ResizeBounds();
         mWallTilemap.ResizeBounds();
+        if (mapSizeChanged)
+        {
+            mGroundTilemap.ResizeBounds();
 
-        float screenRatio = Camera.main.aspect;
-        float targetRatio = mGroundTilemapRenderer.bounds.size.x / mGroundTilemapRenderer.bounds.size.y;
-        var cam = Camera.main;
-        if (screenRatio >= targetRatio)
-            cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2;
-        else
-            cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2 * (targetRatio / screenRatio);
+            float screenRatio = Camera.main.aspect;
+            float targetRatio = mGroundTilemapRenderer.bounds.size.x / mGroundTilemapRenderer.bounds.size.y;
+            var cam = Camera.main;
+            if (screenRatio >= targetRatio)
+                cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2;
+            else
+                cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2 * (targetRatio / screenRatio);
 
-        var size = mGroundTilemapRenderer.bounds.size;
-        float ts = cam.pixelHeight / (cam.orthographicSize * 2f);
-        float xTiles = cam.pixelWidth / ts;
-        cam.transform.position = new Vector3(xTiles / 2, size.y / 2, cam.transform.position.z);
+            var size = mGroundTilemapRenderer.bounds.size;
+            float ts = cam.pixelHeight / (cam.orthographicSize * 2f);
+            float xTiles = cam.pixelWidth / ts;
+            cam.transform.position = new Vector3(xTiles / 2, size.y / 2, cam.transform.position.z);
+        }
     }
 
     private Tile GetWallTile(GroundTile groundTile)
@@ -153,5 +166,12 @@ public class LevelController : MonoBehaviour
     private static Matrix4x4 GetWallTileOrientationMatrix(GroundTile groundTile)
     {
         return Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.Euler(0f, 0f, groundTile.Orientation), new Vector3(1, 1, 1));
+    }
+
+    private readonly System.Random mRand = new System.Random(DateTime.Now.TimeOfDay.Milliseconds);
+
+    private Matrix4x4 GetRandomGroundTileOrientationMatrix()
+    {
+        return Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.Euler(0f, 0f, mRand.Next(0, 4) * 90f), new Vector3(1, 1, 1));
     }
 }

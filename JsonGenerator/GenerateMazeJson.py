@@ -4,7 +4,7 @@ import random
 
 rows = 10
 columns = 10
-nTicks = 2
+nTicks = 90
 ticks = []
 for tick in range(nTicks):
     maze = []

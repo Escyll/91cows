@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using QuickType;
@@ -34,70 +35,77 @@ public class LevelController : MonoBehaviour
 
 #if DEBUG
         JsonData.text = @"C:\Projects\91cows\JsonGenerator\tick0.json";
+        JsonDataFolder.text = @"C:\Projects\91cows\JsonGenerator\";
 #endif
     }
 
-    private void CreateMap(int mapWidth, int mapHeight)
-    {
-        mCurrentMapSize = System.Drawing.Size.Empty;
-        mGroundTilemap.ClearAllTiles();
-        mGroundTilemap.size = new Vector3Int(mapWidth, mapHeight, 0);
-
-        mWallTilemap.ClearAllTiles();
-        mWallTilemap.size = new Vector3Int(mapWidth, mapHeight, 0);
-
-        for (int j = 0; j < mGroundTilemap.size.y; ++j)
-        {
-            for (int i = 0; i < mGroundTilemap.size.x; ++i)
-            {
-                mGroundTilemap.SetTile(new Vector3Int(i, j, 1), FloorTile);
-                mWallTilemap.SetTile(new Vector3Int(i, j, 1), AllOpenWallTile);
-            }
-        }
-
-        mGroundTilemap.ResizeBounds();
-        mWallTilemap.ResizeBounds();
-
-        float screenRatio = Camera.main.aspect;
-        float targetRatio = mGroundTilemapRenderer.bounds.size.x / mGroundTilemapRenderer.bounds.size.y;
-        var cam = Camera.main;
-        if (screenRatio >= targetRatio)
-            cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2;
-        else
-            cam.orthographicSize = mGroundTilemapRenderer.bounds.size.y / 2 * (targetRatio / screenRatio);
-
-        var size = mGroundTilemapRenderer.bounds.size;
-        float ts = cam.pixelHeight / (cam.orthographicSize * 2f);
-        float xTiles = cam.pixelWidth / ts;
-        cam.transform.position = new Vector3(xTiles / 2, size.y / 2, cam.transform.position.z);
-    }
-
-    public InputField MapWidth;
-    public InputField MapHeight;
-
-    public void GenerateMap()
-    {
-        CreateMap(int.Parse(MapWidth.text), int.Parse(MapHeight.text));
-    }
-
     public InputField JsonData;
+    public InputField JsonDataFolder;
 
     public void GenerateMapFromJson()
     {
-        if (File.Exists(JsonData.text))
+        if (!mIsRunning && File.Exists(JsonData.text))
         {
-            var model = QuickType.Model.FromJson(File.ReadAllText(JsonData.text));
-            CreateMap(model);
+            ResetBotLut();
+            RenderJsonModel(Model.FromJson(File.ReadAllText(JsonData.text)));
         }
         else
         {
-            Debug.Log($"JSON file '{JsonData.text}' not found");
+            Debug.Log($"JSON file '{JsonData.text}' not found or already running from folder");
+        }
+    }
+
+    private void ResetBotLut()
+    {
+        foreach (var kvp in mBotLut)
+        {
+            Debug.Log($"Destroying bot {kvp.Key}");
+            Destroy(kvp.Value, 5);
+        }
+        mBotLut.Clear();
+    }
+
+    private bool mIsRunning = false;
+    private string mJsonFolder;
+    private int mTick;
+
+    public void RunMapFromJsonFolder()
+    {
+        if (!mIsRunning && Directory.Exists(JsonDataFolder.text))
+        {
+            ResetBotLut();
+            mJsonFolder = JsonDataFolder.text;
+            mIsRunning = true;
+            mTick = 0;
+            InvokeRepeating(nameof(RenderNextFolderTick), 0, 1 / 30f);
+        }
+        else
+        {
+            Debug.Log($"JSON folder '{JsonDataFolder.text}' not found or already running");
+        }
+    }
+
+    private void RenderNextFolderTick()
+    {
+        var filename = Path.Combine(mJsonFolder, $"tick{mTick++}.json");
+        if (File.Exists(filename))
+        {
+            RenderJsonModel(Model.FromJson(File.ReadAllText(filename)));
+        }
+        else
+        {
+            mIsRunning = false;
+            ResetBotLut();
+            CancelInvoke(nameof(RenderNextFolderTick));
         }
     }
 
     private System.Drawing.Size mCurrentMapSize = System.Drawing.Size.Empty;
 
-    private void CreateMap(Model model)
+    public GameObject BotPrefab;
+    private Dictionary<long, GameObject> mBotLut = new Dictionary<long, GameObject>();
+
+    private void RenderJsonModel(Model model)
     {
         var mapSize = new System.Drawing.Size((int)model.Columns, (int)model.Rows);
         bool mapSizeChanged = mapSize != mCurrentMapSize;
@@ -144,6 +152,36 @@ public class LevelController : MonoBehaviour
             float xTiles = cam.pixelWidth / ts;
             cam.transform.position = new Vector3(xTiles / 2, size.y / 2, cam.transform.position.z);
         }
+
+        foreach (var bot in model.Bots)
+        {
+            if (mBotLut.ContainsKey(bot.ArucoId))
+            {
+                mBotLut[bot.ArucoId].transform.position = BotToMapPosition(bot, mapSize);
+                mBotLut[bot.ArucoId].transform.rotation = GetBotQuaternion(bot);
+            }
+            else
+            {
+                Debug.Log($"Instantiating bot {bot.ArucoId}");
+                mBotLut[bot.ArucoId] = Instantiate(BotPrefab, BotToMapPosition(bot, mapSize), Quaternion.identity);
+                mBotLut[bot.ArucoId].GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+                mBotLut[bot.ArucoId].transform.rotation = GetBotQuaternion(bot);
+            }
+        }
+    }
+
+    private static Quaternion GetBotQuaternion(Bot bot)
+    {
+        Vector3 forward = new Vector3(0f, (float)(bot.Forward[0]), (float)(bot.Forward[1]));
+        Vector3 right = new Vector3(0f, (float)bot.Right[0], (float)bot.Right[1]);
+        //Debug.Log($"Forward {forward}, Right {right}");
+        Vector3 rightProjected = Vector3.ProjectOnPlane(forward, right).normalized; // ensure vectors are perpendicular
+        return Quaternion.LookRotation(forward, rightProjected);
+    }
+
+    private static Vector3 BotToMapPosition(Bot bot, System.Drawing.Size mapSize)
+    {
+        return new Vector3((float)bot.Position[0] * mapSize.Width, (float)bot.Position[1] * mapSize.Height, 0);
     }
 
     private Tile GetWallTile(GroundTile groundTile)

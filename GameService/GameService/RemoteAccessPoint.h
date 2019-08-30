@@ -10,7 +10,6 @@ class RemoteAccessPoint : public QObject
 {
     Q_OBJECT
 public:
-    explicit RemoteAccessPoint(QObject *parent = nullptr);
 
 signals:
 

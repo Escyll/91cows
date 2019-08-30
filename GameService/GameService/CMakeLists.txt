@@ -12,12 +12,20 @@ include_directories(${CommunicationLib_SOURCE_DIR})
 set(SOURCES
     main.cpp
     BotClient.cpp
+    BotClientCommunicator.cpp
     BotLocationReceiver.cpp
+    BotTrackingService.cpp
+    RemoteAccessPoint.cpp
+    VisualizerAccessPoint.cpp
 )
 
 set(HEADERS
     BotClient.h
+    BotClientCommunicator.h
     BotLocationReceiver.h
+    BotTrackingService.h
+    RemoteAccessPoint.h
+    VisualizerAccessPoint.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

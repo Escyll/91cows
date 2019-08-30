@@ -1,6 +1,3 @@
-// Copyright (c) 2019 by Phenom-World B.V.
-// All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
-
 #include "BotClient.h"
 
 BotClient::BotClient(QScopedPointer<MessageMediator>&& mediator)
@@ -8,7 +5,7 @@ BotClient::BotClient(QScopedPointer<MessageMediator>&& mediator)
 {
 }
 
-void BotClient::sendNewBotLocations(const QJsonObject& jsonMessage)
+void BotClient::sendState(const QJsonObject& jsonMessage)
 {
     m_mediator->sendMessage(jsonMessage);
 }

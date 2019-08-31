@@ -155,33 +155,37 @@ public class LevelController : MonoBehaviour
 
         foreach (var bot in model.Bots)
         {
+            bot.Position = new double[] { 1, 1 };
+            bot.Forward = new double[] { 1, 1 };
+            bot.Right = new double[] { 0.5, -0.5 };
+
             if (mBotLut.ContainsKey(bot.ArucoId))
             {
                 mBotLut[bot.ArucoId].transform.position = BotToMapPosition(bot, mapSize);
-                mBotLut[bot.ArucoId].transform.rotation = GetBotQuaternion(bot);
+                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").forward = MakeVector(bot.Forward);
+                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").right = MakeVector(bot.Right);
             }
             else
             {
                 Debug.Log($"Instantiating bot {bot.ArucoId}");
                 mBotLut[bot.ArucoId] = Instantiate(BotPrefab, BotToMapPosition(bot, mapSize), Quaternion.identity);
-                mBotLut[bot.ArucoId].GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-                mBotLut[bot.ArucoId].transform.rotation = GetBotQuaternion(bot);
+                mBotLut[bot.ArucoId].GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.green);
+                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").forward = MakeVector(bot.Forward);
+                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").right = MakeVector(bot.Right);
+                mBotLut[bot.ArucoId].transform.localScale = new Vector3(2 * MakeVector(bot.Forward).magnitude , 2 * MakeVector(bot.Right).magnitude);
             }
         }
     }
 
-    private static Quaternion GetBotQuaternion(Bot bot)
+    private static Vector3 MakeVector(double[] pointArrayVector)
     {
-        Vector3 forward = new Vector3(0f, (float)(bot.Forward[0]), (float)(bot.Forward[1]));
-        Vector3 right = new Vector3(0f, (float)bot.Right[0], (float)bot.Right[1]);
-        //Debug.Log($"Forward {forward}, Right {right}");
-        Vector3 rightProjected = Vector3.ProjectOnPlane(forward, right).normalized; // ensure vectors are perpendicular
-        return Quaternion.LookRotation(forward, rightProjected);
+        return new Vector3((float)pointArrayVector[0], (float)pointArrayVector[1], 0f);
     }
 
     private static Vector3 BotToMapPosition(Bot bot, System.Drawing.Size mapSize)
     {
-        return new Vector3((float)bot.Position[0] * mapSize.Width, (float)bot.Position[1] * mapSize.Height, 0);
+        Debug.Log(new Vector3((float)bot.Position[0] * (mapSize.Width - 1), (float)bot.Position[1] * (mapSize.Height - 1), 0));
+        return new Vector3((float)bot.Position[0] * (mapSize.Width - 1), (float)bot.Position[1] * (mapSize.Height - 1), 0);
     }
 
     private Tile GetWallTile(GroundTile groundTile)

@@ -155,7 +155,7 @@ public class LevelController : MonoBehaviour
 
         foreach (var bot in model.Bots)
         {
-            bot.Position = new double[] { 1, 1 };
+            bot.Position = new double[] { 0.5, 0.5 };
             bot.Forward = new double[] { 1, 1 };
             bot.Right = new double[] { 0.5, -0.5 };
 
@@ -172,7 +172,7 @@ public class LevelController : MonoBehaviour
                 mBotLut[bot.ArucoId].GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.green);
                 mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").forward = MakeVector(bot.Forward);
                 mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").right = MakeVector(bot.Right);
-                mBotLut[bot.ArucoId].transform.localScale = new Vector3(2 * MakeVector(bot.Forward).magnitude , 2 * MakeVector(bot.Right).magnitude);
+                //mBotLut[bot.ArucoId].transform.localScale = new Vector3(2 * MakeVector(bot.Forward).magnitude , 2 * MakeVector(bot.Right).magnitude);
             }
         }
     }

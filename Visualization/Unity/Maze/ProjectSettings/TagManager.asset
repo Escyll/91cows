@@ -42,6 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Items
+    uniqueID: 3180012393
+    locked: 0
   - name: Bots
     uniqueID: 1304439143
     locked: 0

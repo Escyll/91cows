@@ -104,6 +104,7 @@ public class LevelController : MonoBehaviour
 
     public GameObject BotPrefab;
     private Dictionary<long, GameObject> mBotLut = new Dictionary<long, GameObject>();
+    public GameObject CoinPrefab;
 
     private void RenderJsonModel(Model model)
     {

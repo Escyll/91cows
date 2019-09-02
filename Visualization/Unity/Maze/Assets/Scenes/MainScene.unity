@@ -2450,7 +2450,7 @@ MonoBehaviour:
   JsonDataFolder: {fileID: 8179387}
   BotPrefab: {fileID: 4662611842408879870, guid: 4575be1cca4044c47a12e4a842bac9c1,
     type: 3}
-  CoinPrefab: {fileID: 3672593797303039811, guid: 48a430dc6ecfaef4f916555e5306c47e,
+  CoinPrefab: {fileID: 6603790655879455001, guid: 7cf820c45fc818d479b82af04275b488,
     type: 3}
 --- !u!1 &2113065637
 GameObject:

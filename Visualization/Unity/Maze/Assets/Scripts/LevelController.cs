@@ -163,19 +163,35 @@ public class LevelController : MonoBehaviour
             if (mBotLut.ContainsKey(bot.ArucoId))
             {
                 mBotLut[bot.ArucoId].transform.position = BotToMapPosition(bot, mapSize);
-                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").forward = MakeVector(bot.Forward);
-                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").right = MakeVector(bot.Right);
+                var sprite = GetBotSprite(bot);
+                sprite.up = MakeVector(bot.Forward);
+                sprite.right = MakeVector(bot.Right);
+                mBotLut[bot.ArucoId].transform.localScale = new Vector3(sprite.right.magnitude, sprite.up.magnitude);
+
+#if DEBUG
+                Debug.DrawRay(sprite.position, sprite.right, Color.green);
+                Debug.DrawRay(sprite.position, sprite.up, Color.yellow);
+#endif
             }
             else
             {
                 Debug.Log($"Instantiating bot {bot.ArucoId}");
                 mBotLut[bot.ArucoId] = Instantiate(BotPrefab, BotToMapPosition(bot, mapSize), Quaternion.identity);
-                mBotLut[bot.ArucoId].GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.green);
-                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").forward = MakeVector(bot.Forward);
-                mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite").right = MakeVector(bot.Right);
-                //mBotLut[bot.ArucoId].transform.localScale = new Vector3(2 * MakeVector(bot.Forward).magnitude , 2 * MakeVector(bot.Right).magnitude);
+                mBotLut[bot.ArucoId].GetComponentInChildren<Renderer>().material.SetColor("_Color", new Color(1, 0, 1, 1));
+                Transform sprite = GetBotSprite(bot);
+                sprite.up = MakeVector(bot.Forward);
+                sprite.right = MakeVector(bot.Right);
+                mBotLut[bot.ArucoId].transform.localScale = new Vector3(sprite.right.magnitude, sprite.up.magnitude);
+
+                //Debug.DrawRay(sprite.position, sprite.right, Color.green, 60);
+                //Debug.DrawRay(sprite.position, sprite.up, Color.yellow, 60);
             }
         }
+    }
+
+    private Transform GetBotSprite(Bot bot)
+    {
+        return mBotLut[bot.ArucoId].transform.Find("Origin").transform.Find("Sprite");
     }
 
     private static Vector3 MakeVector(double[] pointArrayVector)

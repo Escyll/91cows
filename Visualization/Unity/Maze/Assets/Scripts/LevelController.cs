@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using QuickType;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -100,7 +99,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private System.Drawing.Size mCurrentMapSize = System.Drawing.Size.Empty;
+    private Vector2Int mCurrentMapSize = Vector2Int.zero;
 
     public GameObject BotPrefab;
     private Dictionary<long, GameObject> mBotLut = new Dictionary<long, GameObject>();
@@ -108,18 +107,18 @@ public class LevelController : MonoBehaviour
 
     private void RenderJsonModel(Model model)
     {
-        var mapSize = new System.Drawing.Size((int)model.Columns, (int)model.Rows);
+        var mapSize = new Vector2Int((int)model.Columns, (int)model.Rows);
         bool mapSizeChanged = mapSize != mCurrentMapSize;
         mCurrentMapSize = mapSize;
 
         if (mapSizeChanged)
         {
             mGroundTilemap.ClearAllTiles();
-            mGroundTilemap.size = new Vector3Int(mapSize.Width, mapSize.Height, 0);
+            mGroundTilemap.size = new Vector3Int(mapSize.x, mapSize.y, 0);
         }
 
         mWallTilemap.ClearAllTiles();
-        mWallTilemap.size = new Vector3Int(mapSize.Width, mapSize.Height, 0);
+        mWallTilemap.size = new Vector3Int(mapSize.x, mapSize.y, 0);
 
         for (int row = 0; row < mGroundTilemap.size.y; ++row)
         {
@@ -199,10 +198,10 @@ public class LevelController : MonoBehaviour
         return new Vector3((float)pointArrayVector[0], (float)pointArrayVector[1], 0f);
     }
 
-    private static Vector3 BotToMapPosition(Bot bot, System.Drawing.Size mapSize)
+    private static Vector3 BotToMapPosition(Bot bot, Vector2Int mapSize)
     {
-        Debug.Log(new Vector3((float)bot.Position[0] * (mapSize.Width - 1), (float)bot.Position[1] * (mapSize.Height - 1), 0));
-        return new Vector3((float)bot.Position[0] * (mapSize.Width - 1), (float)bot.Position[1] * (mapSize.Height - 1), 0);
+        Debug.Log(new Vector3((float)bot.Position[0] * (mapSize.x - 1), (float)bot.Position[1] * (mapSize.y - 1), 0));
+        return new Vector3((float)bot.Position[0] * (mapSize.x - 1), (float)bot.Position[1] * (mapSize.y - 1), 0);
     }
 
     private Tile GetWallTile(GroundTile groundTile)

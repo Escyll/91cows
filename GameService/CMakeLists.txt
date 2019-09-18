@@ -1,8 +1,10 @@
 project(GameService)
 
+add_subdirectory(GeometryLib)
 add_subdirectory(CommunicationLib)
 add_subdirectory(GameService)
 add_subdirectory(FakeBotDetectionService)
 add_subdirectory(FakeBotClient)
 add_subdirectory(MazeLib)
 add_subdirectory(MazeGenerator)
+add_subdirectory(CollisionDetectionLib)

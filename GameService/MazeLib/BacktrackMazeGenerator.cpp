@@ -65,14 +65,14 @@ void VisitableMaze::breakOpen(const QPoint& from, const QPoint& to)
         return;
     }
     // Neighbour to the top
-    if (to.y() == from.y() - 1)
+    if (to.y() == from.y() + 1)
     {
         getCell(from).mazeCell.walls.removeAll(MazeCell::Side::Top);
         getCell(to).mazeCell.walls.removeAll(MazeCell::Side::Bottom);
         return;
     }
     // Neighbour to the bottom
-    if (to.y() == from.y() + 1)
+    if (to.y() == from.y() - 1)
     {
         getCell(from).mazeCell.walls.removeAll(MazeCell::Side::Bottom);
         getCell(to).mazeCell.walls.removeAll(MazeCell::Side::Top);
@@ -113,7 +113,7 @@ VisitableMazeCell& VisitableMaze::operator[](const QPoint& position)
 
 bool VisitableMaze::hasUnvisitedNeighbours(const QPoint& position) const
 {
-    auto topNeighbour = QPoint(position.x(), position.y() - 1);
+    auto topNeighbour = QPoint(position.x(), position.y() + 1);
     if (isWithinBounds(topNeighbour) && !getCell(topNeighbour).visited)
     {
         return true;
@@ -123,7 +123,7 @@ bool VisitableMaze::hasUnvisitedNeighbours(const QPoint& position) const
     {
         return true;
     }
-    auto bottomNeighbour = QPoint(position.x(), position.y() + 1);
+    auto bottomNeighbour = QPoint(position.x(), position.y() - 1);
     if (isWithinBounds(bottomNeighbour) && !getCell(bottomNeighbour).visited)
     {
         return true;
@@ -139,7 +139,7 @@ bool VisitableMaze::hasUnvisitedNeighbours(const QPoint& position) const
 QVector<QPoint> VisitableMaze::getUnvisitedNeightbours(const QPoint& position) const
 {
     QVector<QPoint> possibleNeighbours;
-    auto topNeighbour = QPoint(position.x(), position.y() - 1);
+    auto topNeighbour = QPoint(position.x(), position.y() + 1);
     if (isWithinBounds(topNeighbour) && !getCell(topNeighbour).visited)
     {
         possibleNeighbours << topNeighbour;
@@ -149,7 +149,7 @@ QVector<QPoint> VisitableMaze::getUnvisitedNeightbours(const QPoint& position) c
     {
         possibleNeighbours << leftNeighbour;
     }
-    auto bottomNeighbour = QPoint(position.x(), position.y() + 1);
+    auto bottomNeighbour = QPoint(position.x(), position.y() - 1);
     if (isWithinBounds(bottomNeighbour) && !getCell(bottomNeighbour).visited)
     {
         possibleNeighbours << bottomNeighbour;

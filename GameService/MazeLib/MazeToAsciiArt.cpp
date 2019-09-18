@@ -12,7 +12,7 @@ void drawCell(const Maze& maze, const QPoint& position, QVector<QVector<QChar>>&
     auto cell = maze.getCell(position);
     int charactersHorizontallyPerCell = cellArtSize.width();
     int linesPerCell = cellArtSize.height();
-    auto top = position.y()*linesPerCell;
+    auto top = (maze.getLayout().height() - position.y() - 1)*linesPerCell;
     auto bottom = top + cellArtSize.height() - 1;
     auto left = position.x()*charactersHorizontallyPerCell;
     auto right = left + cellArtSize.width() - 1;

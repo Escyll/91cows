@@ -1,6 +1,7 @@
 // Copyright (c) 2019 by Phenom-World B.V.
 // All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
 
+#include <QJsonObject>
 #include <QPoint>
 #include <QSize>
 #include <QVector>
@@ -21,6 +22,8 @@ public:
     MazeCell(const QVector<Side>& walls);
     virtual ~MazeCell() = default;
     QVector<Side> walls;
+
+    QJsonObject toJson();
 };
 
 class Maze
@@ -34,6 +37,9 @@ public:
     const MazeCell& getCell(const QPoint& position) const;
     const MazeCell& operator[](const QPoint& position) const;
     QSize getLayout() const;
+
+public:
+    QJsonArray toJson();
 
 private:
     QSize m_layout;

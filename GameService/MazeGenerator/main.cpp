@@ -9,8 +9,8 @@ int main(int /*argc*/, char */*argv*/[])
 {
     BacktrackMazeGenerator generator;
     MazePostProcessing postProcessor;
-    auto maze = generator.generateMaze(QSize(10, 10));
+    auto maze = generator.generateMaze(QSize(11, 11));
     postProcessor.removeDeadEndsInInnerRegionOfMaze(maze);
-    postProcessor.removeRandomWallInInnerRegionOfMaze(maze, 15);
+    postProcessor.removeRandomWallInInnerRegionOfMaze(maze, 20);
     MazeToAsciiArt::drawToConsole(maze);
 }

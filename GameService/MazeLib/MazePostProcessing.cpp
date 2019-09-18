@@ -20,13 +20,13 @@ void MazePostProcessing::removeRandomWall(Maze& maze, const QPoint& position)
     {
         possibleWallsToRemove << MazeCell::Side::Right;
     }
-    if (position.y() > 0 && cell.walls.contains(MazeCell::Side::Top))
-    {
-        possibleWallsToRemove << MazeCell::Side::Top;
-    }
-    if (position.y() < maze.getLayout().height() - 1 && cell.walls.contains(MazeCell::Side::Bottom))
+    if (position.y() > 0 && cell.walls.contains(MazeCell::Side::Bottom))
     {
         possibleWallsToRemove << MazeCell::Side::Bottom;
+    }
+    if (position.y() < maze.getLayout().height() - 1 && cell.walls.contains(MazeCell::Side::Top))
+    {
+        possibleWallsToRemove << MazeCell::Side::Top;
     }
     if (possibleWallsToRemove.count() <= 0)
     {
@@ -80,14 +80,14 @@ void MazePostProcessing::breakOpen(Maze& maze, const QPoint& from, const QPoint&
         return;
     }
     // Neighbour to the top
-    if (to.y() == from.y() - 1)
+    if (to.y() == from.y() + 1)
     {
         maze[from].walls.removeAll(MazeCell::Side::Top);
         maze[to].walls.removeAll(MazeCell::Side::Bottom);
         return;
     }
     // Neighbour to the bottom
-    if (to.y() == from.y() + 1)
+    if (to.y() == from.y() - 1)
     {
         maze[from].walls.removeAll(MazeCell::Side::Bottom);
         maze[to].walls.removeAll(MazeCell::Side::Top);
@@ -101,13 +101,13 @@ void MazePostProcessing::breakOpen(Maze& maze, const QPoint& from, MazeCell::Sid
     switch (side)
     {
     case MazeCell::Side::Top:
-        breakOpen(maze, from, QPoint(from.x(), from.y() - 1));
+        breakOpen(maze, from, QPoint(from.x(), from.y() + 1));
         break;
     case MazeCell::Side::Left:
         breakOpen(maze, from, QPoint(from.x() - 1, from.y()));
         break;
     case MazeCell::Side::Bottom:
-        breakOpen(maze, from, QPoint(from.x(), from.y() + 1));
+        breakOpen(maze, from, QPoint(from.x(), from.y() - 1));
         break;
     case MazeCell::Side::Right:
         breakOpen(maze, from, QPoint(from.x() + 1, from.y()));

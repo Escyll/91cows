@@ -5,7 +5,7 @@ project(GameService VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 REQUIRED Core Network)
+find_package(Qt5 REQUIRED Core Network Gui)
 
 include_directories(${CommunicationLib_SOURCE_DIR})
 
@@ -15,6 +15,9 @@ set(SOURCES
     BotClientCommunicator.cpp
     BotLocationReceiver.cpp
     BotTrackingService.cpp
+    GameOptions.cpp
+    GameRunner.cpp
+    Game.cpp
     RemoteAccessPoint.cpp
     VisualizerAccessPoint.cpp
 )
@@ -24,10 +27,13 @@ set(HEADERS
     BotClientCommunicator.h
     BotLocationReceiver.h
     BotTrackingService.h
+    GameOptions.h
+    GameRunner.h
+    Game.h
     RemoteAccessPoint.h
     VisualizerAccessPoint.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network CommunicationLib)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network Qt5::Gui CommunicationLib CollisionDetectionLib GeometryLib MazeLib)

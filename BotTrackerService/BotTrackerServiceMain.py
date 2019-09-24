@@ -1,11 +1,13 @@
 import argparse
 import CameraCalibration as cal
 import ArucoTracker as tracker
+import Communicator as com
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--calibrate", action='store_true', default=False, help='Perform camera calibration')
     ap.add_argument("--visualize", action='store_true', default=False, help='Visualize the tracking on a preview window')
+    ap.add_argument("--communicate", action='store_true', default=False, help='Transmit data via tcp')
     args = ap.parse_args()
 
     cal_obj = cal.CameraCalibration(use_precaptured_images = not args.calibrate)
@@ -13,7 +15,11 @@ def main():
         cal_obj.calibrate_camera()
     camera_matrix, dist_matrix = cal_obj.extract_existing_calibration_data()
 
-    tracker_obj = tracker.ArucoTracker(camera_matrix, dist_matrix, visualization=args.visualize)
+    com_obj = None
+    if args.communicate:
+        com_obj = com.Communicator()
+
+    tracker_obj = tracker.ArucoTracker(camera_matrix, dist_matrix, com_obj, visualization=args.visualize)
     tracker_obj.track_aruco_markers()
     
 if __name__ == '__main__':

@@ -16,7 +16,6 @@ class Communicator(object):
         self.__sock.close()
 
     def transmit_data(self, data):
-        json_data = json.dumps(data) + gc.g_end_marker
         if data:
+            json_data = json.dumps(data) + gc.g_end_marker
             self.__sock.sendall(json_data.encode('utf-8'))
-            print('sending {}'.format(json_data))

@@ -8,11 +8,12 @@
 GameRunner::GameRunner(QObject *parent)
     : QObject(parent)
 {
+    m_game.stop();
 }
 
-void GameRunner::createNewGame()
+void GameRunner::createNewGame(const GameOptions& gameOptions)
 {
-    m_game = Game(GameOptions(QSize(10, 10)));
+    m_game = Game(gameOptions);
 }
 
 void GameRunner::startGame()
@@ -23,8 +24,12 @@ void GameRunner::startGame()
 
 void GameRunner::stopGame()
 {
-    killTimer(m_timerId);
-    m_game.stop();
+    if (m_timerId != -1)
+    {
+        killTimer(m_timerId);
+        m_game.stop();
+        m_timerId = -1;
+    }
 }
 
 void GameRunner::timerEvent(QTimerEvent* event)
@@ -32,7 +37,7 @@ void GameRunner::timerEvent(QTimerEvent* event)
     if (m_timerId == event->timerId())
     {
         m_game.handleTick();
-//        auto obscuredState = m_game.getObscuredState();
+        emit sendOutObscuredState(m_game.getObscuredState());
         emit sendOutRevealedState(m_game.getRevealedState());
     }
 }

@@ -15,7 +15,7 @@ public:
     explicit GameRunner(QObject *parent = nullptr);
 
 public:
-    void createNewGame();
+    void createNewGame(const GameOptions& gameOptions);
     void startGame();
     void stopGame();
 
@@ -25,10 +25,11 @@ protected:
 
 signals:
     void sendOutRevealedState(const QJsonObject& revealedState);
+    void sendOutObscuredState(const QJsonObject& revealedState);
 
 private:
     Game m_game;
-    int m_timerId;
+    int m_timerId = -1;
 };
 
 #endif // GAMERUNNER_H

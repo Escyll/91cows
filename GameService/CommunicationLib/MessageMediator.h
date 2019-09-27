@@ -16,6 +16,7 @@ protected:
 
 signals:
     void jsonMessageReceived(const QJsonObject& message);
+    void disconnected();
 };
 
 #endif // MESSAGEMEDIATOR_H

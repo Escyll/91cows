@@ -17,6 +17,10 @@ MessageMediatorTcpSocket::MessageMediatorTcpSocket(QTcpSocket* socket)
             emitAsJsonObject(object.toLatin1());
         }
     });
+    QObject::connect(m_socket, &QTcpSocket::disconnected, this, [this]
+    {
+        emit disconnected();
+    });
 }
 
 void MessageMediatorTcpSocket::sendMessage(const QByteArray& message)

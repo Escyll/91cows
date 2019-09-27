@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QHostAddress>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTcpSocket>
@@ -18,16 +19,21 @@ int main(int argc, char *argv[])
         qDebug() << "Could not connect to Game Service";
         return 1;
     }
-    int tick = 0;
     QTimer timer;
-    QObject::connect(&timer, &QTimer::timeout, [&gameServiceSocket, &tick]
+    QObject::connect(&timer, &QTimer::timeout, [&gameServiceSocket]
     {
-        qDebug() << "Writing tick" << tick;
-        gameServiceSocket.write(QJsonDocument(QJsonObject({
-            {"tick", tick++}
-        })).toJson(QJsonDocument::JsonFormat::Compact));
+        QJsonObject json;
+        QJsonArray botJsonArray;
+        QJsonObject botJson;
+        botJson["arucoId"] = 13;
+        botJson["position"] = QJsonArray() << 0.13 << 0.62;
+        botJson["orientationPointX"] = QJsonArray() << 0.025 << 0.0;
+        botJson["orientationPointY"] = QJsonArray() << 0.0 << 0.025;
+        botJsonArray << botJson;
+        json["bots"] = botJsonArray;
+        gameServiceSocket.write(QJsonDocument(json).toJson(QJsonDocument::JsonFormat::Compact));
     });
-    timer.start(1000);
+    timer.start(10);
 
     return app.exec();
 }

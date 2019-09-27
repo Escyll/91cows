@@ -7,31 +7,27 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 REQUIRED Core Network Gui)
 
-include_directories(${CommunicationLib_SOURCE_DIR})
-
 set(SOURCES
     main.cpp
-    BotClient.cpp
-    BotClientCommunicator.cpp
-    BotLocationReceiver.cpp
-    BotTrackingService.cpp
-    GameOptions.cpp
+    ActionItem.cpp
+    BotClientSockets.cpp
+    BotInfo.cpp
+    BotTrackingServiceSocket.cpp
     GameRunner.cpp
     Game.cpp
-    RemoteAccessPoint.cpp
-    VisualizerAccessPoint.cpp
+    RemoteControllerSocket.cpp
+    VisualizationSocket.cpp
 )
 
 set(HEADERS
-    BotClient.h
-    BotClientCommunicator.h
-    BotLocationReceiver.h
-    BotTrackingService.h
-    GameOptions.h
+    ActionItem.h
+    BotClientSockets.h
+    BotInfo.h
+    BotTrackingServiceSocket.h
     GameRunner.h
     Game.h
-    RemoteAccessPoint.h
-    VisualizerAccessPoint.h
+    RemoteControllerSocket.h
+    VisualizationSocket.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

@@ -1,10 +1,13 @@
 // Copyright (c) 2019 by Phenom-World B.V.
 // All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
 
+#include "ActionItem.h"
+#include "BotInfo.h"
 #include "GameOptions.h"
 
 #include <Maze.h>
 #include <QJsonObject>
+#include <QMap>
 #include <QVector2D>
 
 #ifndef GAME_H
@@ -29,11 +32,17 @@ public:
     QJsonObject getRevealedState();
 
 private:
+    void handleWallCollisions();
+    void handleCollectables();
+    QJsonArray getBotJsonArray();
+    void insertSharedGameState(QJsonObject& jsonState);
+
+private:
+    State m_state = State::Stopped;
     int m_tick = 0;
     Maze m_maze;
-    QVector2D m_botForward = QVector2D(0, 0.025f);
-    QVector2D m_botRight = QVector2D(0.025f, 0);
-    QPointF m_botLocation = QPointF(0.5, 0.5);
+    QMap<int, BotInfo> m_bots;
+    QVector<ActionItem> m_actionItems;
 };
 
 #endif // GAME_H

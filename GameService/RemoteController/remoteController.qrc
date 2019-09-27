@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Main.qml</file>
+        <file>Spacer.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>

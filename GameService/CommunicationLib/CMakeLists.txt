@@ -9,15 +9,20 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt5 REQUIRED Core Network)
 
 set(SOURCES
+    GameOptions.cpp
     MessageMediatorTcpSocket.cpp
     MessageMediator.cpp
+    RemoteControllerCommands.cpp
 )
 
 set(HEADERS
+    GameOptions.h
     MessageMediator.h
     MessageMediatorTcpSocket.h
+    RemoteControllerCommands.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)

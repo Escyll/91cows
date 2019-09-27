@@ -29,6 +29,7 @@ public:
 class Maze
 {
 public:
+    Maze();
     Maze(const QSize& layout, const QVector<MazeCell>& cells);
 
     QVector<MazeCell> getCells() const;

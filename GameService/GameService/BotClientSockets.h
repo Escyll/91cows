@@ -1,25 +1,24 @@
 // Copyright (c) 2019 by Phenom-World B.V.
 // All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
 
-#ifndef BOTCLIENTCOMMUNICATOR_H
-#define BOTCLIENTCOMMUNICATOR_H
+#ifndef BOTCLIENTSOCKETS_H
+#define BOTCLIENTSOCKETS_H
 
-#include "BotClient.h"
-
+#include <MessageMediator.h>
 #include <QTcpServer>
 
-class BotClientCommunicator : public QObject
+class BotClientSockets : public QObject
 {
     Q_OBJECT
 public:
-    BotClientCommunicator();
+    BotClientSockets();
 
     bool listen(const QHostAddress &address = QHostAddress::Any, unsigned short port = 0);
     void sendState(const QJsonObject& doc);
 
 private:
-    QList<QSharedPointer<BotClient>> m_botClients;
+    QList<QSharedPointer<MessageMediator>> m_botClients;
     QTcpServer m_botClientServer;
 };
 
-#endif // BOTCLIENTCOMMUNICATOR_H
+#endif // BOTCLIENTSOCKETS_H

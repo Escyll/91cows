@@ -1,9 +1,9 @@
-#include "BotClientCommunicator.h"
-#include "BotTrackingService.h"
-#include "RemoteAccessPoint.h"
+#include "BotClientSockets.h"
+#include "BotTrackingServiceSocket.h"
+#include "RemoteControllerSocket.h"
 #include "CollisionDetector.h"
 #include "GameRunner.h"
-#include "VisualizerAccessPoint.h"
+#include "VisualizationSocket.h"
 
 #include <QCoreApplication>
 #include <QJsonDocument>
@@ -12,39 +12,71 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    BotTrackingService botTrackingService;
-    BotClientCommunicator botClientCommunicator;
-    RemoteAccessPoint serviceAccessPoint;
-//    VisualizerAccessPoint visualizerAccessPoint;
+    BotTrackingServiceSocket botTrackingServiceSocket;
+    BotClientSockets botClientSockets;
+    RemoteControllerSocket remoteControllerSocket;
+    VisualizationSocket visualizationSocket;
 
-//    QObject::connect(&botTrackingService, &BotTrackingService::newBotLocations, &botClientCommunicator, &BotClientCommunicator::sendState);
-
-    if (botTrackingService.listen(QHostAddress::Any, static_cast<quint16>(9635)))
+    if (botTrackingServiceSocket.listen(QHostAddress::Any, static_cast<quint16>(9635)))
     {
-        qDebug() << "BotTrackingService listening";
+        qDebug() << "BotTrackingServiceSocket listening";
     }
     else
     {
-        qDebug() << "Not listening";
+        qDebug() << "BotTrackingServiceSocket not listening";
     }
 
-    if (botClientCommunicator.listen(QHostAddress::Any, static_cast<quint16>(9835)))
+    if (botClientSockets.listen(QHostAddress::Any, static_cast<quint16>(9735)))
     {
-        qDebug() << "BotClientCommunicator listening";
+        qDebug() << "BotClientSockets listening";
     }
     else
     {
-        qDebug() << "Not listening";
+        qDebug() << "BotClientSockets not listening";
+    }
+    if (visualizationSocket.listen(QHostAddress::Any, static_cast<quint16>(9835)))
+    {
+        qDebug() << "VisualizationSocket listening";
+    }
+    else
+    {
+        qDebug() << "VisualizationSocket not listening";
+    }
+    if (remoteControllerSocket.listen(QHostAddress::Any, static_cast<quint16>(9935)))
+    {
+        qDebug() << "RemoteControllerSocket listening";
+    }
+    else
+    {
+        qDebug() << "RemoteController not listening";
     }
 
     GameRunner gameRunner;
-    gameRunner.createNewGame();
-    gameRunner.startGame();
 
-    QObject::connect(&gameRunner, &GameRunner::sendOutRevealedState, [&botClientCommunicator] (const QJsonObject& state)
+    QObject::connect(&gameRunner, &GameRunner::sendOutRevealedState, [&visualizationSocket] (const QJsonObject& state)
     {
-        qDebug().noquote().nospace() << "Sending state: " << QJsonDocument(state).toJson(QJsonDocument::Compact) << "\n";
-        botClientCommunicator.sendState(state);
+        qDebug().noquote().nospace() << "Sending out gameState" << state;
+        visualizationSocket.sendState(state);
+    });
+    QObject::connect(&gameRunner, &GameRunner::sendOutObscuredState, [&botClientSockets] (const QJsonObject& state)
+    {
+        botClientSockets.sendState(state);
+    });
+    QObject::connect(& botTrackingServiceSocket, &BotTrackingServiceSocket::newBotLocations, []
+    {
+
+    });
+    QObject::connect(&remoteControllerSocket, &RemoteControllerSocket::createGame, [&gameRunner] (const GameOptions& gameOptions)
+    {
+        gameRunner.createNewGame(gameOptions);
+    });
+    QObject::connect(&remoteControllerSocket, &RemoteControllerSocket::startGame, [&gameRunner]
+    {
+        gameRunner.startGame();
+    });
+    QObject::connect(&remoteControllerSocket, &RemoteControllerSocket::stopGame, [&gameRunner]
+    {
+        gameRunner.stopGame();
     });
 
     return app.exec();

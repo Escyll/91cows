@@ -5,6 +5,10 @@
 
 #include <QJsonArray>
 
+Maze::Maze()
+{
+}
+
 Maze::Maze(const QSize& layout, const QVector<MazeCell>& cells)
     : m_layout(layout)
     , m_cells(cells)

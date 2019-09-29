@@ -1,0 +1,6 @@
+{
+    "extends": "./node_modules/@91cows/build-typescript/includes/tsconfig-node.json",
+    "compilerOptions": {
+        "types": ["node", "jest"]
+    }
+}

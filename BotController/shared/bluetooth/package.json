@@ -1,0 +1,31 @@
+{
+    "name": "@91cows/shared-bluetooth",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Wrapper for all Bluetooth communication",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "build": "tsc --project . && tslint --project . --format verbose && jest --runInBand 2>&1",
+        "test": "jest --runInBand",
+        "test:update": "jest --runInBand -u",
+        "test:watch": "jest --runInBand --watch",
+        "watch": "tsc --project . --watch",
+        "start": "node ./lib/findConnections.js"
+    },
+    "keywords": [],
+    "author": "91cows",
+    "dependencies": {
+        "bluetooth-serial-port": "2.2.6",
+        "@types/node": "12.7.8"
+    },
+    "devDependencies": {
+        "@91cows/build-typescript": "1.0.0",
+        "tslint": "5.12.1",
+        "typescript": "3.6.3",
+        "prettier": "1.16.4",
+        "@types/jest": "24.0.11",
+        "jest": "24.7.1",
+        "ts-jest": "24.0.2"
+    }
+}

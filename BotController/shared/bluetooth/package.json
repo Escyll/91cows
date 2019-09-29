@@ -1,0 +1,20 @@
+{
+    "name": "@91cows/shared-bluetooth",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Wrapper for all Bluetooth communication",
+    "scripts": {
+        "build": ""
+    },
+    "keywords": [],
+    "author": "91cows",
+    "dependencies": {
+        "node-bluetooth": "1.2.6"        
+    },
+    "peerDependencies": {
+        "@91cows/build-typescript": "1.0.0",
+        "tslint": "5.12.1",
+        "typescript": "3.6.3",
+        "prettier": "1.16.4"
+    }
+}

@@ -1,0 +1,136 @@
+{
+    "$schema": "http://json.schemastore.org/tslint",
+    "rulesDirectory": [
+        "tslint-plugin-prettier",
+        "tslint-microsoft-contrib",
+        "tslint-consistent-codestyle"
+    ],
+    "extends": [
+        "tslint-microsoft-contrib",
+        "./tslint-consistent-codestyle.json",
+        "tslint-config-prettier"
+    ],
+    "rules": {
+        "completed-docs": false, // TODO renable
+        "no-function-constructor-with-string-args": false, // todo replace function-constructor
+        "no-reserved-keywords": false, // replace with the TSLint variable-name rule.
+        "no-increment-decrement": false, // replace with the TSLint increment-decrement rule.
+        "no-unnecessary-bind": false, // replace with the TSLint unnecessary-bind rule.
+        "no-import-side-effect": false,
+        "no-submodule-imports": false,
+        "await-promise": true,
+        "no-floating-promises": true,
+        "promise-function-async": true,
+        "no-relative-imports": false,
+        "prefer-array-literal": [true, { "allow-type-parameters": true }],
+        "no-constant-condition": [true, { "checkLoops": false }],
+        "no-angle-bracket-type-assertion": true,
+        "no-as-type-assertion": false,
+        "prefer-type-cast": false,
+        "function-name": false,
+        "typedef": [
+            true,
+            "call-signature",
+            "parameter",
+            "property-declaration",
+            "member-variable-declaration"
+        ],
+        "interface-name": false,
+        "naming-convention": [
+            true,
+            {
+                "type": "default",
+                "format": "camelCase",
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid"
+            },
+            {
+                "type": "variable",
+                "modifiers": ["global", "const"],
+                "format": ["camelCase", "UPPER_CASE", "PascalCase"] // PascalCase for TSX components
+            },
+            {
+                "type": "parameter",
+                "modifiers": "unused",
+                "leadingUnderscore": "allow"
+            },
+            {
+                "type": "member",
+                "modifiers": "private",
+                "leadingUnderscore": "require"
+            },
+            {
+                "type": "member",
+                "modifiers": "protected",
+                "leadingUnderscore": "require"
+            },
+            {
+                "type": "property",
+                "modifiers": ["public", "static", "const"],
+                "format": "UPPER_CASE"
+            },
+            { "type": "type", "format": "PascalCase" },
+            { "type": "class", "modifiers": "abstract", "prefix": "Abstract" },
+            { "type": "interface", "format": "PascalCase" },
+            { "type": "genericTypeParameter", "regex": "^[A-Z]$" },
+            { "type": "enumMember", "format": "PascalCase" }
+        ],
+        "ext-curly": false,
+        "curly": true,
+        "newline-before-return": false,
+        "strict-boolean-expressions": [
+            false,
+            "allow-null-union",
+            "allow-undefined-union",
+            "allow-string",
+            "allow-mix",
+            "ignore-rhs"
+        ],
+        "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+        "no-return-undefined": false,
+        "no-default-export": false,
+        "no-void-expression": [true, "ignore-arrow-function-shorthand"],
+        "no-parameter-reassignment": false,
+        "no-unnecessary-type-annotation": false,
+        "no-duplicate-imports": [true, { "allow-namespace-imports": true }], // allow-namespace-imports will come soon...
+        "no-backbone-get-set-outside-model": false,
+        "ordered-imports": [
+            false,
+            {
+                "import-sources-order": "lowercase-last",
+                "module-source-path": "full",
+                "named-imports-order": "lowercase-last",
+                "grouped-imports": true,
+                "groups": [
+                    {
+                        "name": "Source map support and dotenv",
+                        "match": "^(source-map-support/register)|(dotenv/config)",
+                        "order": 10
+                    },
+                    {
+                        "name": "LabWorld packages",
+                        "match": "^@labworld/",
+                        "order": 30
+                    },
+                    {
+                        "name": "Parent packages",
+                        "match": "^\\.\\.",
+                        "order": 40
+                    },
+                    {
+                        "name": "Local packages",
+                        "match": "^\\.",
+                        "order": 50
+                    },
+                    {
+                        "name": "Global packages",
+                        "match": ".*",
+                        "order": 20
+                    }
+                ]
+            }
+        ],
+        "mocha-no-side-effect-code": [true, { "ignore": "it\\.(todo|each|skip|only).*" }],
+        "prettier": true
+    }
+}

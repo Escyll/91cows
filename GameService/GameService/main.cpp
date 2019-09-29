@@ -62,9 +62,9 @@ int main(int argc, char *argv[])
     {
         botClientSockets.sendState(state);
     });
-    QObject::connect(& botTrackingServiceSocket, &BotTrackingServiceSocket::newBotLocations, []
+    QObject::connect(& botTrackingServiceSocket, &BotTrackingServiceSocket::newBotLocations, [&gameRunner] (const QVector<BotInfo>& botLocations)
     {
-
+        gameRunner.setBotLocations(botLocations);
     });
     QObject::connect(&remoteControllerSocket, &RemoteControllerSocket::createGame, [&gameRunner] (const GameOptions& gameOptions)
     {

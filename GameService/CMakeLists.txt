@@ -1,5 +1,6 @@
 project(GameService)
 
+set(CMAKE_CXX_STANDARD 14)
 add_subdirectory(GeometryLib)
 add_subdirectory(CommunicationLib)
 add_subdirectory(GameService)

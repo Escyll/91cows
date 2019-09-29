@@ -26,8 +26,6 @@ Game::Game(GameOptions options)
     qDebug() << "New game created. Maze looks like:";
     MazeToAsciiArt::drawToConsole(m_maze);
     m_state = State::Waiting;
-    m_bots[1] = BotInfo(1, QPointF(0.4, 0.2), QVector2D(-0.025f, 0.f), QVector2D(0.f, 0.025f));
-    m_bots[5] = BotInfo(5, QPointF(0.6, 0.4), QVector2D(0.025f, 0.f), QVector2D(0.f, -0.025f));
     int typeId = 0;
     for (auto type : options.numberOfActionItems.keys())
     {
@@ -53,12 +51,21 @@ void Game::handleTick()
 void Game::start()
 {
     m_tick = 0;
+    m_bots.clear();
     m_state = State::Running;
 }
 
 void Game::stop()
 {
     m_state = State::Stopped;
+}
+
+void Game::setBotLocations(const QVector<BotInfo>& botLocations)
+{
+    for (auto botLocation : botLocations)
+    {
+        m_bots[botLocation.arucoId] = botLocation;
+    }
 }
 
 QJsonArray Game::getBotJsonArray()
@@ -87,15 +94,12 @@ void Game::insertSharedGameState(QJsonObject& jsonState)
     jsonState["columns"] = m_maze.getLayout().height();
     jsonState["data"] = m_maze.toJson();
     jsonState["bots"] = getBotJsonArray();
-    jsonState["coins"] = QJsonArray(); // TODO
-    jsonState["potions"] = QJsonArray(); // TODO
 }
 
 QJsonObject Game::getObscuredState()
 {
     QJsonObject jsonState;
     insertSharedGameState(jsonState);
-//    jsonState["chests"] = QJsonArray(); // TODO
     return jsonState;
 }
 
@@ -103,8 +107,6 @@ QJsonObject Game::getRevealedState()
 {
     QJsonObject jsonState;
     insertSharedGameState(jsonState);
-//    jsonState["chests"] = QJsonArray(); // TODO
-//    jsonState["mimics"] = QJsonArray(); // TODO
     QJsonArray actionItemsArray;
     for (auto actionItem : m_actionItems)
     {

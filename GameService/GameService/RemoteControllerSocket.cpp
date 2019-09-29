@@ -12,7 +12,7 @@ RemoteControllerSocket::RemoteControllerSocket()
     QObject::connect(&m_remoteControllerTcpServer, &QTcpServer::newConnection, this, [this]
     {
         m_mediator = QSharedPointer<MessageMediatorTcpSocket>::create(m_remoteControllerTcpServer.nextPendingConnection());
-        QObject::connect(m_mediator.get(), &MessageMediator::jsonMessageReceived, this, [this](const QJsonObject& jsonMessage)
+        QObject::connect(m_mediator.get(), qOverload<const QJsonObject&>(&MessageMediator::jsonMessageReceived), this, [this](const QJsonObject& jsonMessage)
         {
             qDebug().noquote() << QJsonDocument(jsonMessage).toJson(QJsonDocument::JsonFormat::Compact);
             parseCommand(jsonMessage);

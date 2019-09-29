@@ -26,6 +26,7 @@ public:
     void handleTick();
     void start();
     void stop();
+    void setBotLocations(const QVector<BotInfo>& botLocations);
 
 public:
     QJsonObject getObscuredState();

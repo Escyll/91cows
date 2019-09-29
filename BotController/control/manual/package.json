@@ -1,8 +1,8 @@
 {
-    "name": "@91cows/shared-bluetooth",
+    "name": "@91cows/control-manual",
     "version": "1.0.0",
     "private": true,
-    "description": "Wrapper for all Bluetooth communication",
+    "description": "Manual control for the bot",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
@@ -11,13 +11,15 @@
         "test:update": "jest --runInBand -u",
         "test:watch": "jest --runInBand --watch",
         "watch": "tsc --project . --watch",
-        "start": "node ./lib/findConnections.js"
+        "start": "node ./lib/basicControl.js"
     },
     "keywords": [],
     "author": "91cows",
     "dependencies": {
-        "bluetooth-serial-port": "2.2.6",
-        "@types/node": "12.7.8"
+        "@91cows/shared-bluetooth": "1.0.0",
+        "@types/node": "12.7.8",
+        "dotenv": "8.1.0",
+        "prompts": "2.2.1"
     },
     "devDependencies": {
         "@91cows/build-typescript": "1.0.0",
@@ -26,6 +28,7 @@
         "prettier": "1.16.4",
         "@types/jest": "24.0.11",
         "jest": "24.7.1",
-        "ts-jest": "24.0.2"
+        "ts-jest": "24.0.2",
+        "@types/prompts": "2.0.1"
     }
 }

@@ -1,0 +1,3 @@
+{
+    "extends": "@91cows/build-typescript/includes/tslint.json"
+}

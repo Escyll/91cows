@@ -339,6 +339,10 @@
         {
             "packageName": "@91cows/shared-bluetooth",
             "projectFolder": "shared/bluetooth"
+        },
+        {
+            "packageName": "@91cows/control-manual",
+            "projectFolder": "control/manual"
         }
     ]
 }

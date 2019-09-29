@@ -1,0 +1,20 @@
+{
+    "typescript.tsdk": "build\\typescript\\node_modules\\typescript\\lib",
+    "files.associations": {
+        "**/common/config/rush/*.json": "jsonc",
+        "rush.json": "jsonc",
+        "tslint-consistent-codestyle.json": "jsonc"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        "**/**.js": {
+            "when": "$(basename).tsx"
+        },
+        "**/*.map": {
+            "when": "$(basename).map"
+        }
+    }
+}

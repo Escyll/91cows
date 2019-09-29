@@ -6,11 +6,13 @@ import sys
 
 
 class ArucoTracker(object):
-    def __init__(self, camera_matrix, dist_matrix, com_obj, visualization=True):
+    def __init__(self, camera_matrix, dist_matrix, com_obj, 
+                 ref_point=[(0, 0), (gc.g_frame_width, gc.g_frame_height)], visualization=True):
         self.__camera_matrix = camera_matrix
         self.__dist_matrix = dist_matrix
         self.__visualization = visualization
         self.__communicate = False
+        self.__ref_point = ref_point
         if com_obj is not None:
             self.__com_obj = com_obj
             self.__com_data = []  # List of dictionaries
@@ -37,7 +39,9 @@ class ArucoTracker(object):
         ret, frame = self.__cap.read()
         if not ret:
             sys.exit("no data in incoming frame")
-        return frame
+        cropped_frame = frame[self.__ref_point[0][1]: self.__ref_point[1][1],
+                              self.__ref_point[0][0]: self.__ref_point[1][0]]
+        return cropped_frame
 
     def __transmit_com_data(self):
         if self.__communicate:
@@ -53,15 +57,17 @@ class ArucoTracker(object):
     def __append_robot_to_com_dict(self, robot_id, imgpts):
         if self.__communicate:
             robot_info = {}
-            center_x = imgpts[0][0][0] / gc.g_frame_width
-            center_y = imgpts[0][0][1] / gc.g_frame_height
-            xorient_x = imgpts[1][0][0] / gc.g_frame_width
-            xorient_y = imgpts[1][0][1] / gc.g_frame_height
-            yorient_x = imgpts[2][0][0] / gc.g_frame_width
-            yorient_y = imgpts[2][0][1] / gc.g_frame_height
-            robot_info["robot"] = {"arucoId" : int(robot_id),
+            width = self.__ref_point[1][0] - self.__ref_point[0][0]
+            height = self.__ref_point[1][1] - self.__ref_point[0][1]
+            center_x = imgpts[0][0][0] / width
+            center_y = imgpts[0][0][1] / height
+            xorient_x = imgpts[1][0][0] / width
+            xorient_y = imgpts[1][0][1] / height
+            yorient_x = imgpts[2][0][0] / width
+            yorient_y = imgpts[2][0][1] / height
+            robot_info["robot"] = {"arucoId": int(robot_id),
                                    "position": [center_x, center_y],
-                                   "xorient": [xorient_x, xorient_y], 
+                                   "xorient": [xorient_x, xorient_y],
                                    "yorient": [yorient_x, yorient_y]}
             self.__com_data.append(robot_info)
 
@@ -102,7 +108,7 @@ class ArucoTracker(object):
                 if self.__visualization:
                     cv2.putText(frame, "No Ids", (0, 64),
                                 self.__font, 1, (0, 255, 0), 2, cv2.LINE_AA)
-            
+
             self.__transmit_com_data()
             if self.__visualization:
                 cv2.imshow(gc.g_tracker_live_window, frame)

@@ -34,7 +34,7 @@ public:
 
 private:
     void handleWallCollisions();
-    void handleCollectables();
+    void handleActionItems();
     QJsonArray getBotJsonArray();
     void insertSharedGameState(QJsonObject& jsonState);
 

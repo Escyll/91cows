@@ -44,7 +44,7 @@ void Game::handleTick()
     {
         m_tick++;
         handleWallCollisions();
-        handleCollectables();
+        handleActionItems();
     }
 }
 
@@ -123,7 +123,7 @@ void Game::handleWallCollisions()
 
 }
 
-void Game::handleCollectables()
+void Game::handleActionItems()
 {
 
 }

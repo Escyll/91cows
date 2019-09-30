@@ -8,6 +8,7 @@
 #include <MazeToAsciiArt.h>
 #include <QJsonArray>
 #include <QDebug>
+#include <QRandomGenerator>
 
 Game::Game()
 {
@@ -26,15 +27,22 @@ Game::Game(GameOptions options)
     qDebug() << "New game created. Maze looks like:";
     MazeToAsciiArt::drawToConsole(m_maze);
     m_state = State::Waiting;
-    int typeId = 0;
     for (auto type : options.numberOfActionItems.keys())
     {
-        auto total = options.numberOfActionItems[type];
         for (auto number = 0; number < options.numberOfActionItems[type]; number++)
         {
-            m_actionItems << ActionItem {type, QPointF(static_cast<double>(number)/(total-1), typeId/6.0)};
+            placeActionItem(type);
         }
-        typeId++;
+    }
+}
+
+void Game::placeActionItem(GameOptions::ActionItemType type)
+{
+    if (m_availableActionItemLocations.length() >= 1)
+    {
+        int randomLocation = QRandomGenerator::global()->bounded(m_availableActionItemLocations.length());
+        auto location = m_availableActionItemLocations.takeAt(randomLocation);
+        m_actionItems << ActionItem {type, location};
     }
 }
 
@@ -120,10 +128,10 @@ QJsonObject Game::getRevealedState()
 
 void Game::handleWallCollisions()
 {
-
+    // Per bot: If timer not running => subtract points and set reset timer (QElapsedTimer?, maybe sharable with a ghost potion?)
 }
 
 void Game::handleActionItems()
 {
-
+    // Per bot: If collision with actionItem => Handle effects & remove item & place new item (in different spot)
 }

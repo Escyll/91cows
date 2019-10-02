@@ -1,16 +1,24 @@
-v breadboard shield for arduino => circuit/perfboard
-v bluetooth module HC-05
-v arduino + USB kable
-v 2x stepper motor
-v 2x motor driver
-v 2x wheels
-- 6x wires (male - male)
-- 18x wires (male - female)
+Hardware:
+- bluetooth module HC-05
+- arduino
+- USB cable
+- 2x stepper motor
+- 2x motor driver
+- 2x wheels
+
+3D printed parts:
+- 1x Printed Model
+- 1x printed battery holder
+- 1x armarker holder
+
+Bolts and stuff:
 - ArUco marker
-- Printed Model
-- 10x M3 18mm
-- 6x M3 25mm
-- 28 M3 bolts
-- 9v battery
-- 9v battery connector
-- 
+- 9x M3 16mm
+- 4x M3 25mm
+- 21x M3 bolts
+- 4x AAA batteries
+
+Sioux:
+- 1x Sioux arduino shield
+- 1x battery connector
+- cablebinder

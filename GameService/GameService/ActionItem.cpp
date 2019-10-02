@@ -2,3 +2,5 @@
 // All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
 
 #include "ActionItem.h"
+
+int ActionItem::nextId = 0;

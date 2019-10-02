@@ -27,6 +27,13 @@ Game::Game(GameOptions options)
     qDebug() << "New game created. Maze looks like:";
     MazeToAsciiArt::drawToConsole(m_maze);
     m_state = State::Waiting;
+    for (auto x = 0; x < m_maze.getLayout().width(); x++)
+    {
+        for (auto y = 0; y < m_maze.getLayout().height(); y++)
+        {
+            m_availableActionItemLocations << QPoint(x, y);
+        }
+    }
     for (auto type : options.numberOfActionItems.keys())
     {
         for (auto number = 0; number < options.numberOfActionItems[type]; number++)
@@ -42,7 +49,7 @@ void Game::placeActionItem(GameOptions::ActionItemType type)
     {
         int randomLocation = QRandomGenerator::global()->bounded(m_availableActionItemLocations.length());
         auto location = m_availableActionItemLocations.takeAt(randomLocation);
-        m_actionItems << ActionItem {type, QPointF((location.x()+0.5)/m_maze.getLayout().width(), (location.y()+0.5)/m_maze.getLayout().height())};
+        m_actionItems << ActionItem {type, QPointF((location.x()+0.5)/m_maze.getLayout().width(), (location.y()+0.5)/m_maze.getLayout().height()), location, ++ActionItem::nextId};
     }
 }
 
@@ -120,8 +127,16 @@ QJsonObject Game::getRevealedState()
     {
         actionItemsArray << QJsonObject{{"type", GameOptions::actionItemTypeToString(actionItem.type)},
                                         {"x", actionItem.location.x()},
-                                        {"y", actionItem.location.y()}};
+                                        {"y", actionItem.location.y()},
+                                        {"id", actionItem.id}};
     }
+//    if (m_tick % 30 == 0)
+//    {
+        auto last = m_actionItems.takeLast();
+        m_availableActionItemLocations << last.cellIndex;
+        placeActionItem(last.type);
+//    }
+
     jsonState["actionItems"] = actionItemsArray;
     return jsonState;
 }

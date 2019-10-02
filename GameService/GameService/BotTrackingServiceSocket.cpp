@@ -24,16 +24,19 @@ BotTrackingServiceSocket::BotTrackingServiceSocket()
                 auto position = robotObject["position"].toArray();
                 auto xorient = robotObject["xorient"].toArray();
                 auto yorient = robotObject["yorient"].toArray();
+
+                auto right = 0.025f*QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())).normalized();
+                auto forward = 0.025f*QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())).normalized();
                 parsedBotInfo << BotInfo(arucoId,
-                                         QPointF(position[0].toDouble(), -position[1].toDouble()),
-                                         QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())),
-                                         QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())));
+                                         QPointF(position[0].toDouble(), 1 - position[1].toDouble()),
+                                         forward,
+                                         right);
             }
             emit newBotLocations(parsedBotInfo);
         });
         QObject::connect(m_mediator.get(), &MessageMediator::disconnected, this, [this]
         {
-            m_mediator.reset();
+//            m_mediator.reset();
         });
     });
 }

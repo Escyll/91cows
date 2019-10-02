@@ -11,6 +11,9 @@ class ActionItem
 public:
     GameOptions::ActionItemType type;
     QPointF location;
+    QPoint cellIndex;
+    int id;
+    static int nextId;
 };
 
 #endif // ACTIONITEM_H

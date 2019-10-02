@@ -26,6 +26,7 @@ public:
     void handleTick();
     void start();
     void stop();
+    void setBotLocations(const QVector<BotInfo>& botLocations);
 
 public:
     QJsonObject getObscuredState();
@@ -33,9 +34,10 @@ public:
 
 private:
     void handleWallCollisions();
-    void handleCollectables();
+    void handleActionItems();
     QJsonArray getBotJsonArray();
     void insertSharedGameState(QJsonObject& jsonState);
+    void placeActionItem(GameOptions::ActionItemType type);
 
 private:
     State m_state = State::Stopped;
@@ -43,6 +45,7 @@ private:
     Maze m_maze;
     QMap<int, BotInfo> m_bots;
     QVector<ActionItem> m_actionItems;
+    QVector<QPoint> m_availableActionItemLocations;
 };
 
 #endif // GAME_H

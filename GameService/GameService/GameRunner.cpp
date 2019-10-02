@@ -32,6 +32,11 @@ void GameRunner::stopGame()
     }
 }
 
+void GameRunner::setBotLocations(const QVector<BotInfo>& botLocations)
+{
+    m_game.setBotLocations(botLocations);
+}
+
 void GameRunner::timerEvent(QTimerEvent* event)
 {
     if (m_timerId == event->timerId())

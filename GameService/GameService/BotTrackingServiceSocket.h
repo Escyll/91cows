@@ -4,6 +4,7 @@
 #ifndef BOTTRACKINGSERVICESOCKET_H
 #define BOTTRACKINGSERVICESOCKET_H
 
+#include "BotInfo.h"
 #include "MessageMediator.h"
 
 #include <QScopedPointer>
@@ -17,7 +18,7 @@ public:
     bool listen(const QHostAddress& address = QHostAddress::Any, unsigned short port = 0);
 
 signals:
-    void newBotLocations(const QJsonObject& jsonMessage) const;
+    void newBotLocations(const QVector<BotInfo>& bots) const;
 
 private:
     QSharedPointer<MessageMediator> m_mediator;

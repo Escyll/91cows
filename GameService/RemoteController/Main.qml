@@ -9,7 +9,7 @@ ApplicationWindow {
     visibility: ApplicationWindow.Windowed
     visible: true
     width: 480
-    height: 640
+    height: 1000
 
     RemoteController {
         id: remoteController
@@ -68,13 +68,86 @@ ApplicationWindow {
                 to: 100
                 value: 20
             }
+            Label {
+                text: "Number of coins"
+            }
+            SpinBox {
+                id: numberOfCoins
+                from: 0
+                to: 100
+                value: 10
+            }
+            Label {
+                text: "Number of treasure chests"
+            }
+            SpinBox {
+                id: numberOfTreasureChests
+                from: 0
+                to: 10
+                value: 2
+            }
+            Label {
+                text: "Number of empty chests"
+            }
+            SpinBox {
+                id: numberOfEmptyChests
+                from: 0
+                to: 10
+                value: 1
+            }
+            Label {
+                text: "Number of mimic chests"
+            }
+            SpinBox {
+                id: numberOfMimicChests
+                from: 0
+                to: 10
+                value: 1
+            }
+            Label {
+                text: "Number of spike traps"
+            }
+            SpinBox {
+                id: numberOfSpikeTraps
+                from: 0
+                to: 10
+                value: 4
+            }
+            Label {
+                text: "Number of wall bottles"
+            }
+            SpinBox {
+                id: numberOfWallBottles
+                from: 0
+                to: 10
+                value: 4
+            }
+            Label {
+                text: "Number of spike trap bottles"
+            }
+            SpinBox {
+                id: numberOfSpikeTrapBottles
+                from: 0
+                to: 10
+                value: 4
+            }
             Row {
                 Layout.columnSpan: 2
                 Layout.topMargin: 16
                 spacing: 16
                 Button {
                     text: "Create Game"
-                    onClicked: remoteController.createGame(Qt.size(mazeSizeSpinBox.value, mazeSizeSpinBox.value), removeDeadEndsCheckBox.checked, numberOfWallsToRemoveSpinBox.value)
+                    onClicked: remoteController.createGame(Qt.size(mazeSizeSpinBox.value, mazeSizeSpinBox.value),
+                                                           removeDeadEndsCheckBox.checked,
+                                                           numberOfWallsToRemoveSpinBox.value,
+                                                           numberOfCoins.value,
+                                                           numberOfTreasureChests.value,
+                                                           numberOfEmptyChests.value,
+                                                           numberOfMimicChests.value,
+                                                           numberOfSpikeTraps.value,
+                                                           numberOfWallBottles.value,
+                                                           numberOfSpikeTrapBottles.value
+                                                           )
                 }
                 Button {
                     text: "Start Game"

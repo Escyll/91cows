@@ -8,6 +8,7 @@
 #include <MazeToAsciiArt.h>
 #include <QJsonArray>
 #include <QDebug>
+#include <QRandomGenerator>
 
 Game::Game()
 {
@@ -26,17 +27,22 @@ Game::Game(GameOptions options)
     qDebug() << "New game created. Maze looks like:";
     MazeToAsciiArt::drawToConsole(m_maze);
     m_state = State::Waiting;
-    m_bots[1] = BotInfo(1, QPointF(0.4, 0.2), QVector2D(-0.025f, 0.f), QVector2D(0.f, 0.025f));
-    m_bots[5] = BotInfo(5, QPointF(0.6, 0.4), QVector2D(0.025f, 0.f), QVector2D(0.f, -0.025f));
-    int typeId = 0;
     for (auto type : options.numberOfActionItems.keys())
     {
-        auto total = options.numberOfActionItems[type];
         for (auto number = 0; number < options.numberOfActionItems[type]; number++)
         {
-            m_actionItems << ActionItem {type, QPointF(static_cast<double>(number)/(total-1), typeId/6.0)};
+            placeActionItem(type);
         }
-        typeId++;
+    }
+}
+
+void Game::placeActionItem(GameOptions::ActionItemType type)
+{
+    if (m_availableActionItemLocations.length() >= 1)
+    {
+        int randomLocation = QRandomGenerator::global()->bounded(m_availableActionItemLocations.length());
+        auto location = m_availableActionItemLocations.takeAt(randomLocation);
+        m_actionItems << ActionItem {type, QPointF((location.x()+0.5)/m_maze.getLayout().width(), (location.y()+0.5)/m_maze.getLayout().height())};
     }
 }
 
@@ -46,19 +52,28 @@ void Game::handleTick()
     {
         m_tick++;
         handleWallCollisions();
-        handleCollectables();
+        handleActionItems();
     }
 }
 
 void Game::start()
 {
     m_tick = 0;
+    m_bots.clear();
     m_state = State::Running;
 }
 
 void Game::stop()
 {
     m_state = State::Stopped;
+}
+
+void Game::setBotLocations(const QVector<BotInfo>& botLocations)
+{
+    for (auto botLocation : botLocations)
+    {
+        m_bots[botLocation.arucoId] = botLocation;
+    }
 }
 
 QJsonArray Game::getBotJsonArray()
@@ -87,15 +102,12 @@ void Game::insertSharedGameState(QJsonObject& jsonState)
     jsonState["columns"] = m_maze.getLayout().height();
     jsonState["data"] = m_maze.toJson();
     jsonState["bots"] = getBotJsonArray();
-    jsonState["coins"] = QJsonArray(); // TODO
-    jsonState["potions"] = QJsonArray(); // TODO
 }
 
 QJsonObject Game::getObscuredState()
 {
     QJsonObject jsonState;
     insertSharedGameState(jsonState);
-//    jsonState["chests"] = QJsonArray(); // TODO
     return jsonState;
 }
 
@@ -103,8 +115,6 @@ QJsonObject Game::getRevealedState()
 {
     QJsonObject jsonState;
     insertSharedGameState(jsonState);
-//    jsonState["chests"] = QJsonArray(); // TODO
-//    jsonState["mimics"] = QJsonArray(); // TODO
     QJsonArray actionItemsArray;
     for (auto actionItem : m_actionItems)
     {
@@ -118,10 +128,19 @@ QJsonObject Game::getRevealedState()
 
 void Game::handleWallCollisions()
 {
-
+    // Per bot: If timer not running => subtract points and set reset timer (QElapsedTimer?, maybe sharable with a ghost potion?)
 }
 
-void Game::handleCollectables()
+void Game::handleActionItems()
 {
+    // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
 
+    // Slack conversation:
+    //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)
+    //Bottle: can pass through a wall once
+    //Testtube: can pass through a spiketrap once
+    //Coin: 1 point
+    //TreasureChest: 10 points
+    //EmptyChest: 0 points
+    //MimicChest: penalty of 5 points (-5)
 }

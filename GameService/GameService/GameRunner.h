@@ -18,6 +18,7 @@ public:
     void createNewGame(const GameOptions& gameOptions);
     void startGame();
     void stopGame();
+    void setBotLocations(const QVector<BotInfo>& botLocations);
 
     // QObject interface
 protected:

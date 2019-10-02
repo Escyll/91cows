@@ -14,14 +14,16 @@ class RemoteController : public QObject
     Q_OBJECT
 public:
     Q_INVOKABLE void connect(const QString& address);
-    Q_INVOKABLE void createGame(const QSize mazeSize, bool removeDeadEnds, int numberOfWallsToRemove,
-                                int coins = 20,
-                                int treasureChests = 15,
-                                int emptyChests = 17,
-                                int mimicChests = 13,
-                                int spikeTraps = 18,
-                                int bottles = 17,
-                                int testTubes = 12);
+    Q_INVOKABLE void createGame(const QSize mazeSize,
+                                bool removeDeadEnds,
+                                int numberOfWallsToRemove,
+                                int coins,
+                                int treasureChests,
+                                int emptyChests,
+                                int mimicChests,
+                                int spikeTraps,
+                                int bottles,
+                                int testTubes);
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void stopGame();
 

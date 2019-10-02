@@ -42,7 +42,7 @@ void Game::placeActionItem(GameOptions::ActionItemType type)
     {
         int randomLocation = QRandomGenerator::global()->bounded(m_availableActionItemLocations.length());
         auto location = m_availableActionItemLocations.takeAt(randomLocation);
-        m_actionItems << ActionItem {type, location};
+        m_actionItems << ActionItem {type, QPointF((location.x()+0.5)/m_maze.getLayout().width(), (location.y()+0.5)/m_maze.getLayout().height())};
     }
 }
 
@@ -133,5 +133,14 @@ void Game::handleWallCollisions()
 
 void Game::handleActionItems()
 {
-    // Per bot: If collision with actionItem => Handle effects & remove item & place new item (in different spot)
+    // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
+
+    // Slack conversation:
+    //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)
+    //Bottle: can pass through a wall once
+    //Testtube: can pass through a spiketrap once
+    //Coin: 1 point
+    //TreasureChest: 10 points
+    //EmptyChest: 0 points
+    //MimicChest: penalty of 5 points (-5)
 }

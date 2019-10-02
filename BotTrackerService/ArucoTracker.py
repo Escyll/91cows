@@ -67,8 +67,8 @@ class ArucoTracker(object):
             yorient_y = imgpts[2][0][1] / height
             robot_info["robot"] = {"arucoId": int(robot_id),
                                    "position": [center_x, center_y],
-                                   "xorient": [xorient_x, xorient_y],
-                                   "yorient": [yorient_x, yorient_y]}
+                                   "xorient": [xorient_x - center_x, xorient_y - center_y],
+                                   "yorient": [yorient_x - center_x, yorient_y - center_y]}
             self.__com_data.append(robot_info)
 
     def __initialize_aruco_dict_and_params(self):

@@ -8,7 +8,7 @@ import sys
 class FieldSetter(object):
     def __init__(self, visualization=True):
         self.__visualization = visualization
-        self.__ref_point = [(0,0), (0,0)]
+        self.__ref_point = [(0, 0), (0, 0)]
 
     def __initialize_capture(self):
         self.__cap = cv2.VideoCapture(gc.g_source)
@@ -17,7 +17,8 @@ class FieldSetter(object):
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
                 gc.g_field_selection_live_window, cv2.WINDOW_AUTOSIZE)
-        cv2.setMouseCallback(gc.g_field_selection_live_window, self.__shape_selection)
+        cv2.setMouseCallback(
+            gc.g_field_selection_live_window, self.__shape_selection)
 
     def __stop_field_selection(self):
         print("Exiting Field Selection")
@@ -37,12 +38,13 @@ class FieldSetter(object):
     def __shape_selection(self, event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN:
             self.__ref_point[0] = (x, y)
-        elif event -- cv2.EVENT_LBUTTONUP:
+        elif event - - cv2.EVENT_LBUTTONUP:
             self.__ref_point[1] = (x, y)
 
     def __draw_selection(self, frame):
         if self.__visualization:
-            cv2.rectangle(frame, self.__ref_point[0], self.__ref_point[1], (0, 255, 0))
+            cv2.rectangle(
+                frame, self.__ref_point[0], self.__ref_point[1], (0, 255, 0))
             cv2.imshow(gc.g_field_selection_live_window, frame)
 
     def select_playing_field(self):

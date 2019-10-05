@@ -6,17 +6,22 @@ import sys
 
 
 class ArucoTracker(object):
-    def __init__(self, camera_matrix, dist_matrix, com_obj, 
-                 ref_point=[(0, 0), (gc.g_frame_width, gc.g_frame_height)], visualization=True):
+    def __init__(self, camera_matrix, dist_matrix, com_obj, rec_obj,
+                 ref_point=[(0, 0), (gc.g_frame_width, gc.g_frame_height)],
+                 visualization=True):
         self.__camera_matrix = camera_matrix
         self.__dist_matrix = dist_matrix
         self.__visualization = visualization
         self.__communicate = False
+        self.__record = False
         self.__ref_point = ref_point
         if com_obj is not None:
             self.__com_obj = com_obj
             self.__com_data = []  # List of dictionaries
             self.__communicate = True
+        if rec_obj is not None:
+            self.__rec_obj = rec_obj
+            self.__record = True
 
     def __initialize_capture(self):
         self.__cap = cv2.VideoCapture(gc.g_source)
@@ -49,13 +54,15 @@ class ArucoTracker(object):
                 self.__com_obj.transmit_data(self.__com_data)
             else:
                 self.__com_obj.transmit_data(gc.g_empty_com_data)
+        if self.__record:
+            self.__rec_obj.record_data(self.__com_data)
 
     def __clear_com_data(self):
-        if self.__communicate:
+        if self.__communicate or self.__record:
             self.__com_data = []
 
     def __append_robot_to_com_dict(self, robot_id, imgpts):
-        if self.__communicate:
+        if self.__communicate or self.__record:
             robot_info = {}
             width = self.__ref_point[1][0] - self.__ref_point[0][0]
             height = self.__ref_point[1][1] - self.__ref_point[0][1]
@@ -67,8 +74,10 @@ class ArucoTracker(object):
             yorient_y = imgpts[2][0][1] / height
             robot_info["robot"] = {"arucoId": int(robot_id),
                                    "position": [center_x, center_y],
-                                   "xorient": [xorient_x - center_x, xorient_y - center_y],
-                                   "yorient": [yorient_x - center_x, yorient_y - center_y]}
+                                   "xorient": [xorient_x - center_x,
+                                               xorient_y - center_y],
+                                   "yorient": [yorient_x - center_x,
+                                               yorient_y - center_y]}
             self.__com_data.append(robot_info)
 
     def __initialize_aruco_dict_and_params(self):
@@ -87,14 +96,17 @@ class ArucoTracker(object):
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             corners, ids, _ = cv2.aruco.detectMarkers(
                 gray, self.__aruco_dict, parameters=self.__parameters)
-            if np.all(ids != None):
+            if np.all(ids is not None):
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(
-                    corners, gc.g_marker_length_in_meters, self.__camera_matrix, self.__dist_matrix)
+                    corners, gc.g_marker_length_in_meters,
+                    self.__camera_matrix, self.__dist_matrix)
                 for i in range(0, ids.size):
-                    cv2.aruco.drawAxis(frame, self.__camera_matrix, self.__dist_matrix,
-                                       rvec[i], tvec[i], gc.g_visible_axes_length)
-                    imgpts, _ = cv2.projectPoints(
-                        gc.g_axis, rvec[i], tvec[i], self.__camera_matrix, self.__dist_matrix)
+                    cv2.aruco.drawAxis(frame, self.__camera_matrix,
+                                       self.__dist_matrix, rvec[i],
+                                       tvec[i], gc.g_visible_axes_length)
+                    imgpts, _ = cv2.projectPoints(gc.g_axis, rvec[i], tvec[i],
+                                                  self.__camera_matrix,
+                                                  self.__dist_matrix)
                     self.__append_robot_to_com_dict(ids[i][0], imgpts)
 
                 if self.__visualization:

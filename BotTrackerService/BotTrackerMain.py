@@ -3,6 +3,7 @@ import CameraCalibration as cal
 import ArucoTracker as tracker
 import Communicator as com
 import FieldSetter as fs
+import DataRecorder as rec
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
     ap.add_argument("--communicate", action='store_true',
                     default=False, help='Transmit data via tcp')
     ap.add_argument("--record", action='store_true', default=False,
-                    help="Record robot coordinates in a file for use by simulator")
+                    help="Record robot coordinates in a file for use by sim")
     args = ap.parse_args()
 
     cal_obj = cal.CameraCalibration(use_precaptured_images=not args.calibrate)
@@ -26,13 +27,18 @@ def main():
     field_set_obj = fs.FieldSetter(visualization=True)
     ref_point = field_set_obj.select_playing_field()
     del(field_set_obj)
-    
+
     com_obj = None
     if args.communicate:
-        com_obj = com.Communicator(args.record)
+        com_obj = com.Communicator()
+
+    rec_obj = None
+    if args.record:
+        rec_obj = rec.DataRecorder()
 
     tracker_obj = tracker.ArucoTracker(camera_matrix, dist_matrix, com_obj,
-                                       ref_point, visualization=args.visualize)
+                                       rec_obj, ref_point,
+                                       visualization=args.visualize)
     tracker_obj.track_aruco_markers()
 
 

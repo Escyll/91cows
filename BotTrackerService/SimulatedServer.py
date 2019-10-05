@@ -26,7 +26,7 @@ while True:
                 if data == gc.g_end_marker:
                     break
             print('received {!r}'.format(total_data))
-            
+
             if data:
                 print('data received from', client_address)
             else:

@@ -4,6 +4,7 @@
 #include "ActionItem.h"
 #include "BotInfo.h"
 #include "GameOptions.h"
+#include <CollisionDetector.h>
 
 #include <Maze.h>
 #include <QJsonObject>
@@ -38,6 +39,8 @@ private:
     QJsonArray getBotJsonArray();
     void insertSharedGameState(QJsonObject& jsonState);
     void placeActionItem(GameOptions::ActionItemType type);
+    bool hasCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell,  BotInfo& botInfo);
+    bool lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments);
 
 private:
     State m_state = State::Stopped;

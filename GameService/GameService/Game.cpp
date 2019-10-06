@@ -144,6 +144,18 @@ QJsonObject Game::getRevealedState()
 void Game::handleWallCollisions()
 {
     // Per bot: If timer not running => subtract points and set reset timer (QElapsedTimer?, maybe sharable with a ghost potion?)
+    CollisionDetector collisionDetector;
+
+    double widthPerCell = 1.0/m_maze.getLayout().width();
+    double heightPerCell = 1.0/m_maze.getLayout().height();
+
+    for (auto botInfo : m_bots)
+    {
+        if (hasCollision(collisionDetector, widthPerCell, heightPerCell, botInfo))
+        {
+            //substract points or??
+        }
+    }
 }
 
 void Game::handleActionItems()
@@ -159,3 +171,80 @@ void Game::handleActionItems()
     //EmptyChest: 0 points
     //MimicChest: penalty of 5 points (-5)
 }
+
+bool Game::hasCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell,  BotInfo& botInfo)
+{
+    QPointF rightForward =  botInfo.location + botInfo.forward.toPointF() + botInfo.right.toPointF();
+    QPointF leftForward =  botInfo.location + botInfo.forward.toPointF() - botInfo.right.toPointF();
+    QPointF rightBackward =  botInfo.location - botInfo.forward.toPointF() + botInfo.right.toPointF();
+    QPointF leftBackward =  botInfo.location - botInfo.forward.toPointF() - botInfo.right.toPointF();
+
+    LineSegment frontBot(leftForward, rightForward);
+    LineSegment backBot(leftBackward, rightBackward);
+    LineSegment rightBot(rightBackward, rightForward);
+    LineSegment leftBot(leftForward, leftBackward);
+
+    QVector<LineSegment> botLineSegments = {frontBot, backBot, rightBot, leftBot};
+
+    for (auto y = 0; y < m_maze.getLayout().height(); y++)
+    {
+        for (auto x = 0; x < m_maze.getLayout().width(); x++)
+        {
+            MazeCell mazeCell = m_maze.getCell(QPoint(x, y));
+            for (auto wall : mazeCell.walls)
+            {
+                switch (wall)
+                {
+                    case MazeCell::Side::Top:
+                    {
+                        LineSegment topWall(QPointF(x, y + heightPerCell), QPointF(x + widthPerCell, y + heightPerCell));
+                        if (lineSegmentHasCollisionWithLineSegments(collisionDetector, topWall, botLineSegments))
+                        {
+                            return true;
+                        }
+                        break;
+                    }
+                    case MazeCell::Side::Left:
+                    {
+                        LineSegment leftWall(QPointF(x, y), QPointF(x, y+heightPerCell));
+                        if (lineSegmentHasCollisionWithLineSegments(collisionDetector, leftWall, botLineSegments))
+                        {
+                            return true;
+                        }
+                    }
+                    case MazeCell::Side::Bottom:
+                    {
+                        LineSegment bottomWall(QPointF(x, y), QPointF(x +widthPerCell, y));
+                        if (lineSegmentHasCollisionWithLineSegments(collisionDetector, bottomWall, botLineSegments))
+                        {
+                            return true;
+                        }
+                    }
+                    case MazeCell::Side::Right:
+                    {
+                        LineSegment rightWall(QPointF(x +widthPerCell, y), QPointF(x +widthPerCell, y+heightPerCell));
+                        if (lineSegmentHasCollisionWithLineSegments(collisionDetector, rightWall, botLineSegments))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Game::lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments)
+{
+    for (auto lineSegment : lineSegments)
+    {
+           if (collisionDetector.collide(lineSegment, a) )
+           {
+                 return true;
+           }
+    }
+    return false;
+}
+
+

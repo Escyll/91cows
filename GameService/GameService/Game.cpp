@@ -58,7 +58,7 @@ void Game::handleTick()
     if (m_state == State::Running)
     {
         m_tick++;
-        handleWallCollisions();
+        handleCollisions();
         handleActionItems();
     }
 }
@@ -141,7 +141,7 @@ QJsonObject Game::getRevealedState()
     return jsonState;
 }
 
-void Game::handleWallCollisions()
+void Game::handleCollisions()
 {
     // Per bot: If timer not running => subtract points and set reset timer (QElapsedTimer?, maybe sharable with a ghost potion?)
     CollisionDetector collisionDetector;
@@ -151,11 +151,36 @@ void Game::handleWallCollisions()
 
     for (auto botInfo : m_bots)
     {
-        if (hasCollision(collisionDetector, widthPerCell, heightPerCell, botInfo))
-        {
-            //substract points or??
-        }
+        handleCollisionPerBotInfo(collisionDetector, widthPerCell, heightPerCell, botInfo);
+
+
     }
+}
+
+void Game::handleCollisionPerBotInfo(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, BotInfo& botInfo)
+{
+    QVector<LineSegment> botLineSegments = getBotLineSegments(botInfo);
+
+    if (hasWallCollision(collisionDetector, widthPerCell, heightPerCell, botLineSegments))
+    {
+        //substract points or??
+    }
+
+}
+
+QVector<LineSegment> Game::getBotLineSegments(BotInfo& botInfo)
+{
+    QPointF rightForward =  botInfo.location + botInfo.forward.toPointF() + botInfo.right.toPointF();
+    QPointF leftForward =  botInfo.location + botInfo.forward.toPointF() - botInfo.right.toPointF();
+    QPointF rightBackward =  botInfo.location - botInfo.forward.toPointF() + botInfo.right.toPointF();
+    QPointF leftBackward =  botInfo.location - botInfo.forward.toPointF() - botInfo.right.toPointF();
+
+    LineSegment frontBot(leftForward, rightForward);
+    LineSegment backBot(leftBackward, rightBackward);
+    LineSegment rightBot(rightBackward, rightForward);
+    LineSegment leftBot(leftForward, leftBackward);
+
+    return {frontBot, backBot, rightBot, leftBot};
 }
 
 void Game::handleActionItems()
@@ -172,20 +197,8 @@ void Game::handleActionItems()
     //MimicChest: penalty of 5 points (-5)
 }
 
-bool Game::hasCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell,  BotInfo& botInfo)
+bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments)
 {
-    QPointF rightForward =  botInfo.location + botInfo.forward.toPointF() + botInfo.right.toPointF();
-    QPointF leftForward =  botInfo.location + botInfo.forward.toPointF() - botInfo.right.toPointF();
-    QPointF rightBackward =  botInfo.location - botInfo.forward.toPointF() + botInfo.right.toPointF();
-    QPointF leftBackward =  botInfo.location - botInfo.forward.toPointF() - botInfo.right.toPointF();
-
-    LineSegment frontBot(leftForward, rightForward);
-    LineSegment backBot(leftBackward, rightBackward);
-    LineSegment rightBot(rightBackward, rightForward);
-    LineSegment leftBot(leftForward, leftBackward);
-
-    QVector<LineSegment> botLineSegments = {frontBot, backBot, rightBot, leftBot};
-
     for (auto y = 0; y < m_maze.getLayout().height(); y++)
     {
         for (auto x = 0; x < m_maze.getLayout().width(); x++)

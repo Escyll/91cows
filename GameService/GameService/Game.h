@@ -34,12 +34,16 @@ public:
     QJsonObject getRevealedState();
 
 private:
-    void handleWallCollisions();
     void handleActionItems();
     QJsonArray getBotJsonArray();
     void insertSharedGameState(QJsonObject& jsonState);
     void placeActionItem(GameOptions::ActionItemType type);
-    bool hasCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell,  BotInfo& botInfo);
+
+private:
+    void handleCollisions();
+    void handleCollisionPerBotInfo(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, BotInfo& botInfo);
+    bool hasWallCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments);
+    QVector<LineSegment> getBotLineSegments(BotInfo& botInfo);
     bool lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments);
 
 private:

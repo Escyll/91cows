@@ -151,8 +151,6 @@ void Game::handleGameLoop()
     for (auto botInfo : m_bots)
     {
         handleGameLoopPerBotInfo(collisionDetector, widthPerCell, heightPerCell, botInfo);
-
-
     }
 }
 
@@ -164,9 +162,12 @@ void Game::handleGameLoopPerBotInfo(CollisionDetector& collisionDetector, double
     {
         handleWallCollision(botInfo);
     }
-
+    ActionItem collideActionItem;
+    if (hasActionItemCollition(collisionDetector, widthPerCell, heightPerCell, botLineSegments, collideActionItem))
+    {
+        handleActionItemCollision(botInfo, collideActionItem);
+    }
 }
-
 
 QVector<LineSegment> Game::getBotLineSegments(BotInfo& botInfo)
 {
@@ -283,12 +284,36 @@ void Game::handleWallCollision(BotInfo& botInfo)
     //substract points or??
 }
 
-ActionItem Game::hasActionItemCollition()
+bool Game::hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem)
 {
-    return m_actionItems[0];
+    double widthHalfActionItem = widthPerCell / 6.0;
+    double heightHalfActionItem = heightPerCell / 6.0;
+
+    for (auto actionItem : m_actionItems)
+    {
+        LineSegment topActionItem(QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() + heightHalfActionItem),
+                                  QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() + heightHalfActionItem));
+        LineSegment rightActionItem(QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() + heightHalfActionItem),
+                                  QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() - heightHalfActionItem));
+        LineSegment bottomActionItem(QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem),
+                                  QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem));
+        LineSegment leftActionItem(QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem),
+                                  QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() + heightHalfActionItem));
+        QVector<LineSegment> actionItemSegments = {topActionItem, rightActionItem, bottomActionItem, leftActionItem};
+        for (auto actionItemSegment : actionItemSegments)
+        {
+            if (lineSegmentHasCollisionWithLineSegments(collisionDetector, actionItemSegment, botLineSegments))
+            {
+                collideActionItem = actionItem;
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
-void Game::handleActionItems()
+void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
 {
     // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
 
@@ -300,6 +325,7 @@ void Game::handleActionItems()
     //TreasureChest: 10 points
     //EmptyChest: 0 points
     //MimicChest: penalty of 5 points (-5)
+
 }
 
 bool Game::lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments)

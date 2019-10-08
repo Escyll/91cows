@@ -34,7 +34,6 @@ public:
     QJsonObject getRevealedState();
 
 private:
-    void handleActionItems();
     QJsonArray getBotJsonArray();
     void insertSharedGameState(QJsonObject& jsonState);
     void placeActionItem(GameOptions::ActionItemType type);
@@ -45,7 +44,8 @@ private:
     bool hasWallCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments);
     bool hasCornerWallCollision(CollisionDetector& collisionDetector, double xStart, double yStart, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments);
     void handleWallCollision(BotInfo& botInfo);
-    ActionItem hasActionItemCollition();
+    bool hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem);
+    void handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem);
     QVector<LineSegment> getBotLineSegments(BotInfo& botInfo);
     bool lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments);
 

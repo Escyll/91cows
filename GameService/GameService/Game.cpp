@@ -58,8 +58,7 @@ void Game::handleTick()
     if (m_state == State::Running)
     {
         m_tick++;
-        handleCollisions();
-        handleActionItems();
+        handleGameLoop();
     }
 }
 
@@ -141,7 +140,7 @@ QJsonObject Game::getRevealedState()
     return jsonState;
 }
 
-void Game::handleCollisions()
+void Game::handleGameLoop()
 {
     // Per bot: If timer not running => subtract points and set reset timer (QElapsedTimer?, maybe sharable with a ghost potion?)
     CollisionDetector collisionDetector;
@@ -151,22 +150,23 @@ void Game::handleCollisions()
 
     for (auto botInfo : m_bots)
     {
-        handleCollisionPerBotInfo(collisionDetector, widthPerCell, heightPerCell, botInfo);
+        handleGameLoopPerBotInfo(collisionDetector, widthPerCell, heightPerCell, botInfo);
 
 
     }
 }
 
-void Game::handleCollisionPerBotInfo(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, BotInfo& botInfo)
+void Game::handleGameLoopPerBotInfo(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, BotInfo& botInfo)
 {
     QVector<LineSegment> botLineSegments = getBotLineSegments(botInfo);
 
     if (hasWallCollision(collisionDetector, widthPerCell, heightPerCell, botLineSegments))
     {
-        //substract points or??
+        handleWallCollision(botInfo);
     }
 
 }
+
 
 QVector<LineSegment> Game::getBotLineSegments(BotInfo& botInfo)
 {
@@ -181,20 +181,6 @@ QVector<LineSegment> Game::getBotLineSegments(BotInfo& botInfo)
     LineSegment leftBot(leftForward, leftBackward);
 
     return {frontBot, backBot, rightBot, leftBot};
-}
-
-void Game::handleActionItems()
-{
-    // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
-
-    // Slack conversation:
-    //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)
-    //Bottle: can pass through a wall once
-    //Testtube: can pass through a spiketrap once
-    //Coin: 1 point
-    //TreasureChest: 10 points
-    //EmptyChest: 0 points
-    //MimicChest: penalty of 5 points (-5)
 }
 
 bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments)
@@ -290,6 +276,30 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
         }
     }
     return false;
+}
+
+void Game::handleWallCollision(BotInfo& botInfo)
+{
+    //substract points or??
+}
+
+ActionItem Game::hasActionItemCollition()
+{
+    return m_actionItems[0];
+}
+
+void Game::handleActionItems()
+{
+    // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
+
+    // Slack conversation:
+    //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)
+    //Bottle: can pass through a wall once
+    //Testtube: can pass through a spiketrap once
+    //Coin: 1 point
+    //TreasureChest: 10 points
+    //EmptyChest: 0 points
+    //MimicChest: penalty of 5 points (-5)
 }
 
 bool Game::lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments)

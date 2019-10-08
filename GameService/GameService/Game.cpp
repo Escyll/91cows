@@ -204,13 +204,21 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
         for (auto x = 0; x < m_maze.getLayout().width(); x++)
         {
             MazeCell mazeCell = m_maze.getCell(QPoint(x, y));
+
+            double xStart = x * widthPerCell;
+            double yStart = x * heightPerCell;
+            if (hasCornerWallCollision(collisionDetector, xStart, yStart, widthPerCell, heightPerCell, botLineSegments))
+            {
+                return true;
+            }
+
             for (auto wall : mazeCell.walls)
             {
                 switch (wall)
                 {
                     case MazeCell::Side::Top:
                     {
-                        LineSegment topWall(QPointF(x, y + heightPerCell), QPointF(x + widthPerCell, y + heightPerCell));
+                        LineSegment topWall(QPointF(xStart, yStart  + heightPerCell), QPointF(xStart + widthPerCell, yStart + heightPerCell));
                         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, topWall, botLineSegments))
                         {
                             return true;
@@ -219,7 +227,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                     }
                     case MazeCell::Side::Left:
                     {
-                        LineSegment leftWall(QPointF(x, y), QPointF(x, y+heightPerCell));
+                        LineSegment leftWall(QPointF(xStart, yStart), QPointF(xStart, yStart+heightPerCell));
                         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, leftWall, botLineSegments))
                         {
                             return true;
@@ -227,7 +235,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                     }
                     case MazeCell::Side::Bottom:
                     {
-                        LineSegment bottomWall(QPointF(x, y), QPointF(x +widthPerCell, y));
+                        LineSegment bottomWall(QPointF(xStart, yStart), QPointF(xStart +widthPerCell, yStart));
                         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, bottomWall, botLineSegments))
                         {
                             return true;
@@ -235,7 +243,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                     }
                     case MazeCell::Side::Right:
                     {
-                        LineSegment rightWall(QPointF(x +widthPerCell, y), QPointF(x +widthPerCell, y+heightPerCell));
+                        LineSegment rightWall(QPointF(xStart + widthPerCell, yStart), QPointF(xStart + widthPerCell, yStart+heightPerCell));
                         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, rightWall, botLineSegments))
                         {
                             return true;
@@ -243,6 +251,42 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                     }
                 }
             }
+
+        }
+    }
+    return false;
+}
+
+bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double xStart, double yStart, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments)
+{
+    double widthCornerWall = widthPerCell / 6.0;
+    double heightCornerWall = heightPerCell / 6.0;
+
+    LineSegment cornerBottomLeftToTopWall(QPointF(xStart, yStart), QPointF(xStart, yStart + heightCornerWall));
+    LineSegment cornerBottomLeftToRightWall(QPointF(xStart, yStart), QPointF(xStart + widthCornerWall, yStart));
+
+    LineSegment cornerTopLeftToBottomWall(QPointF(xStart, yStart + heightPerCell), QPointF(xStart, yStart + heightPerCell - heightCornerWall));
+    LineSegment cornerTopLeftToRightWall(QPointF(xStart, yStart + heightPerCell), QPointF(xStart + widthCornerWall, yStart + heightPerCell));
+
+    LineSegment cornerTopRightToBottomWall(QPointF(xStart + widthCornerWall, yStart + heightPerCell), QPointF(xStart + widthCornerWall, yStart + heightPerCell - heightCornerWall));
+    LineSegment cornerTopRightToLeftWall(QPointF(xStart + widthCornerWall, yStart + heightPerCell), QPointF(xStart + widthCornerWall - widthCornerWall, yStart + heightPerCell));
+
+    LineSegment cornerBottomRightToTopWall(QPointF(xStart + widthPerCell, yStart), QPointF(xStart + widthPerCell, yStart + heightCornerWall));
+    LineSegment cornerBottomRightToLeftWall(QPointF(xStart + widthPerCell, yStart), QPointF(xStart + widthPerCell - widthCornerWall, yStart));
+
+    QVector<LineSegment> cornerLineSegments =
+    {
+        cornerBottomLeftToTopWall, cornerBottomLeftToRightWall,
+        cornerTopLeftToBottomWall, cornerTopLeftToRightWall,
+        cornerTopRightToBottomWall, cornerTopRightToLeftWall,
+        cornerBottomRightToTopWall, cornerBottomRightToLeftWall
+    };
+
+    for (auto cornerLineSegment : cornerLineSegments)
+    {
+        if (lineSegmentHasCollisionWithLineSegments(collisionDetector, cornerLineSegment, botLineSegments))
+        {
+            return true;
         }
     }
     return false;

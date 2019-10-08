@@ -66,6 +66,7 @@ void Game::start()
 {
     m_tick = 0;
     m_bots.clear();
+    m_PointsBotMap.clear();
     m_state = State::Running;
 }
 
@@ -79,6 +80,7 @@ void Game::setBotLocations(const QVector<BotInfo>& botLocations)
     for (auto botLocation : botLocations)
     {
         m_bots[botLocation.arucoId] = botLocation;
+        m_PointsBotMap[botLocation.arucoId] = 0;
     }
 }
 
@@ -160,7 +162,15 @@ void Game::handleGameLoopPerBotInfo(CollisionDetector& collisionDetector, double
 
     if (hasWallCollision(collisionDetector, widthPerCell, heightPerCell, botLineSegments))
     {
-        handleWallCollision(botInfo);
+        if (!m_WallCollisionBotMap.contains(botInfo.arucoId))
+        {
+            handleWallCollision(botInfo);
+            m_WallCollisionBotMap[botInfo.arucoId] = true;
+        }
+    }
+    else
+    {
+        m_WallCollisionBotMap.remove(botInfo.arucoId);
     }
     ActionItem collideActionItem;
     if (hasActionItemCollition(collisionDetector, widthPerCell, heightPerCell, botLineSegments, collideActionItem))
@@ -282,6 +292,14 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
 void Game::handleWallCollision(BotInfo& botInfo)
 {
     //substract points or??
+    if (m_BottleBotMap.contains(botInfo.arucoId))
+    {
+        m_BottleBotMap.remove(botInfo.arucoId);
+    }
+    else
+    {
+        m_PointsBotMap[botInfo.arucoId]--;
+    }
 }
 
 bool Game::hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem)
@@ -316,6 +334,53 @@ bool Game::hasActionItemCollition(CollisionDetector& collisionDetector, double w
 void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
 {
     // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
+    switch (actionItem.type)
+    {
+        case GameOptions::ActionItemType::Coin:
+        {
+            m_PointsBotMap[botInfo.arucoId]++;
+            break;
+        }
+        case GameOptions::ActionItemType::Bottle:
+        {
+            m_BottleBotMap.insert(botInfo.arucoId, true);
+            break;
+        }
+        case GameOptions::ActionItemType::TestTube:
+        {
+            m_TesttubeBotMap.insert(botInfo.arucoId, true);
+            break;
+        }
+        case GameOptions::ActionItemType::SpikeTrap:
+        {
+            //what are we going to do here??
+            if (m_TesttubeBotMap.contains(botInfo.arucoId))
+            {
+                m_TesttubeBotMap.remove(botInfo.arucoId);
+            }
+            else
+            {
+                m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] - 1;
+            }
+            break;
+        }
+        case GameOptions::ActionItemType::EmptyChest:
+        {
+            break;
+        }
+        case GameOptions::ActionItemType::MimicChest:
+        {
+            m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] - 5;
+            break;
+        }
+        case GameOptions::ActionItemType::TreasureChest:
+        {
+            m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] + 10;
+            break;
+        }
+    }
+    //todo does not work
+    //m_actionItems.removeOne(actionItem);
 
     // Slack conversation:
     //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)

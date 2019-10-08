@@ -56,6 +56,11 @@ private:
     QMap<int, BotInfo> m_bots;
     QVector<ActionItem> m_actionItems;
     QVector<QPoint> m_availableActionItemLocations;
+
+    QMap<int, bool> m_BottleBotMap;
+    QMap<int, bool> m_TesttubeBotMap;
+    QMap<int, bool> m_WallCollisionBotMap;
+    QMap<int, int> m_PointsBotMap;
 };
 
 #endif // GAME_H

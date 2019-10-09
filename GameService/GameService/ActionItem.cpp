@@ -4,3 +4,8 @@
 #include "ActionItem.h"
 
 int ActionItem::nextId = 0;
+
+bool operator==(const ActionItem& lhs, const ActionItem& rhs)
+{
+    return lhs.id == rhs.id;
+}

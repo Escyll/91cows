@@ -66,7 +66,6 @@ void Game::start()
 {
     m_tick = 0;
     m_bots.clear();
-    m_PointsBotMap.clear();
     m_state = State::Running;
 }
 
@@ -79,8 +78,16 @@ void Game::setBotLocations(const QVector<BotInfo>& botLocations)
 {
     for (auto botLocation : botLocations)
     {
-        m_bots[botLocation.arucoId] = botLocation;
-        m_PointsBotMap[botLocation.arucoId] = 0;
+        if (!m_bots.contains(botLocation.arucoId))
+        {
+            m_bots[botLocation.arucoId] = botLocation;
+        }
+        else
+        {
+            m_bots[botLocation.arucoId].location = botLocation.location;
+            m_bots[botLocation.arucoId].forward = botLocation.forward;
+            m_bots[botLocation.arucoId].right = botLocation.right;
+        }
     }
 }
 
@@ -91,7 +98,10 @@ QJsonArray Game::getBotJsonArray()
     {
         QJsonObject bot;
         bot["arucoId"] = botInfo.arucoId;
+        bot["name"] = botInfo.name;
         bot["position"] = QJsonArray() << botInfo.location.x() << botInfo.location.y();
+        bot["score"] =  botInfo.score;
+        bot["color"] = static_cast<int>(botInfo.color.rgba());
         bot["forward"] = QJsonArray() << static_cast<double>(botInfo.forward.x()) << static_cast<double>(botInfo.forward.y());
         bot["right"] = QJsonArray() << static_cast<double>(botInfo.right.x()) << static_cast<double>(botInfo.right.y());
         botArray << bot;
@@ -131,12 +141,6 @@ QJsonObject Game::getRevealedState()
                                         {"y", actionItem.location.y()},
                                         {"id", actionItem.id}};
     }
-//    if (m_tick % 30 == 0)
-//    {
-//        auto last = m_actionItems.takeLast();
-//        m_availableActionItemLocations << last.cellIndex;
-//        placeActionItem(last.type);
-//    }
 
     jsonState["actionItems"] = actionItemsArray;
     return jsonState;
@@ -150,7 +154,7 @@ void Game::handleGameLoop()
     double widthPerCell = 1.0/m_maze.getLayout().width();
     double heightPerCell = 1.0/m_maze.getLayout().height();
 
-    for (auto botInfo : m_bots)
+    for (auto& botInfo : m_bots)
     {
         handleGameLoopPerBotInfo(collisionDetector, widthPerCell, heightPerCell, botInfo);
     }
@@ -162,20 +166,31 @@ void Game::handleGameLoopPerBotInfo(CollisionDetector& collisionDetector, double
 
     if (hasWallCollision(collisionDetector, widthPerCell, heightPerCell, botLineSegments))
     {
-        if (!m_WallCollisionBotMap.contains(botInfo.arucoId))
+        if (!m_BottleBotMap.contains(botInfo.arucoId))
         {
             handleWallCollision(botInfo);
-            m_WallCollisionBotMap[botInfo.arucoId] = true;
         }
+        m_WallCollisionBotMap[botInfo.arucoId] = true;
     }
-    else
+    else if (m_WallCollisionBotMap.contains(botInfo.arucoId))
     {
         m_WallCollisionBotMap.remove(botInfo.arucoId);
+        m_BottleBotMap.remove(botInfo.arucoId);
     }
+
     ActionItem collideActionItem;
     if (hasActionItemCollition(collisionDetector, widthPerCell, heightPerCell, botLineSegments, collideActionItem))
     {
-        handleActionItemCollision(botInfo, collideActionItem);
+        if (!m_TesttubeBotMap.contains(botInfo.arucoId) || collideActionItem.type != GameOptions::ActionItemType::SpikeTrap)
+        {
+            handleActionItemCollision(botInfo, collideActionItem);
+        }
+        m_ActionItemsCollisionBotMap[botInfo.arucoId] = true;
+    }
+    else if (m_ActionItemsCollisionBotMap.contains(botInfo.arucoId))
+    {
+        m_ActionItemsCollisionBotMap.remove(botInfo.arucoId);
+        m_TesttubeBotMap.remove(botInfo.arucoId);
     }
 }
 
@@ -203,7 +218,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
             MazeCell mazeCell = m_maze.getCell(QPoint(x, y));
 
             double xStart = x * widthPerCell;
-            double yStart = x * heightPerCell;
+            double yStart = y * heightPerCell;
             if (hasCornerWallCollision(collisionDetector, xStart, yStart, widthPerCell, heightPerCell, botLineSegments))
             {
                 return true;
@@ -268,8 +283,8 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
     LineSegment cornerTopLeftToBottomWall(QPointF(xStart, yStart + heightPerCell), QPointF(xStart, yStart + heightPerCell - heightCornerWall));
     LineSegment cornerTopLeftToRightWall(QPointF(xStart, yStart + heightPerCell), QPointF(xStart + widthCornerWall, yStart + heightPerCell));
 
-    LineSegment cornerTopRightToBottomWall(QPointF(xStart + widthCornerWall, yStart + heightPerCell), QPointF(xStart + widthCornerWall, yStart + heightPerCell - heightCornerWall));
-    LineSegment cornerTopRightToLeftWall(QPointF(xStart + widthCornerWall, yStart + heightPerCell), QPointF(xStart + widthCornerWall - widthCornerWall, yStart + heightPerCell));
+    LineSegment cornerTopRightToBottomWall(QPointF(xStart + widthPerCell, yStart + heightPerCell), QPointF(xStart + widthPerCell, yStart + heightPerCell - heightCornerWall));
+    LineSegment cornerTopRightToLeftWall(QPointF(xStart + widthPerCell, yStart + heightPerCell), QPointF(xStart + widthPerCell - widthCornerWall, yStart + heightPerCell));
 
     LineSegment cornerBottomRightToTopWall(QPointF(xStart + widthPerCell, yStart), QPointF(xStart + widthPerCell, yStart + heightCornerWall));
     LineSegment cornerBottomRightToLeftWall(QPointF(xStart + widthPerCell, yStart), QPointF(xStart + widthPerCell - widthCornerWall, yStart));
@@ -282,7 +297,7 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
         cornerBottomRightToTopWall, cornerBottomRightToLeftWall
     };
 
-    for (const auto& cornerLineSegment : cornerLineSegments)
+    for (auto cornerLineSegment : cornerLineSegments)
     {
         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, cornerLineSegment, botLineSegments))
         {
@@ -292,20 +307,16 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
     return false;
 }
 
+
 void Game::handleWallCollision(BotInfo& botInfo)
 {
-    //substract points or??
-    if (m_BottleBotMap.contains(botInfo.arucoId))
-    {
-        m_BottleBotMap.remove(botInfo.arucoId);
-    }
-    else
-    {
-        m_PointsBotMap[botInfo.arucoId]--;
-    }
+    if (botInfo.wallColisionTimer.isValid() && botInfo.wallColisionTimer.elapsed() < 1000) return;
+    botInfo.score--;
+    botInfo.wallColisionTimer.start();
 }
 
-bool Game::hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem)
+
+bool Game::hasActionItemCollition(const CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, const QVector<LineSegment>& botLineSegments, ActionItem& collideActionItem)
 {
     double widthHalfActionItem = widthPerCell / 6.0;
     double heightHalfActionItem = heightPerCell / 6.0;
@@ -334,14 +345,14 @@ bool Game::hasActionItemCollition(CollisionDetector& collisionDetector, double w
     return false;
 }
 
-void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
+void Game::handleActionItemCollision(BotInfo& botInfo, const ActionItem& actionItem)
 {
     // Per bot: If collision with actionItem => Handle effects & remove item & add position to available position list & place new item (in different spot?)
     switch (actionItem.type)
     {
         case GameOptions::ActionItemType::Coin:
         {
-            m_PointsBotMap[botInfo.arucoId]++;
+            botInfo.score++;
             break;
         }
         case GameOptions::ActionItemType::Bottle:
@@ -356,15 +367,9 @@ void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
         }
         case GameOptions::ActionItemType::SpikeTrap:
         {
-            //what are we going to do here??
-            if (m_TesttubeBotMap.contains(botInfo.arucoId))
-            {
-                m_TesttubeBotMap.remove(botInfo.arucoId);
-            }
-            else
-            {
-                m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] - 1;
-            }
+            if (botInfo.spikeCollisionTimer.isValid() && botInfo.spikeCollisionTimer.elapsed() < 1000) return;
+            botInfo.score--;
+            botInfo.spikeCollisionTimer.start();
             break;
         }
         case GameOptions::ActionItemType::EmptyChest:
@@ -373,17 +378,23 @@ void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
         }
         case GameOptions::ActionItemType::MimicChest:
         {
-            m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] - 5;
+            botInfo.score -= 5;
             break;
         }
         case GameOptions::ActionItemType::TreasureChest:
         {
-            m_PointsBotMap[botInfo.arucoId] = m_PointsBotMap[botInfo.arucoId] + 10;
+            botInfo.score += 10;
             break;
         }
     }
-    //todo does not work
-    //m_actionItems.removeOne(actionItem);
+
+    if (actionItem.type != GameOptions::ActionItemType::SpikeTrap)
+    {
+        auto cellIndex = actionItem.cellIndex;
+        placeActionItem(actionItem.type);
+        m_actionItems.removeAll(actionItem);
+        m_availableActionItemLocations.append(cellIndex);
+    }
 
     // Slack conversation:
     //Spiketrap: penalty of 1 point (-1), has iframes after getting hit (10 seconds ?)

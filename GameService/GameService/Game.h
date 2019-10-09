@@ -44,8 +44,8 @@ private:
     bool hasWallCollision(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments);
     bool hasCornerWallCollision(CollisionDetector& collisionDetector, double xStart, double yStart, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments);
     void handleWallCollision(BotInfo& botInfo);
-    bool hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem);
-    void handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem);
+    bool hasActionItemCollition(const CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, const QVector<LineSegment>& botLineSegments, ActionItem& collideActionItem);
+    void handleActionItemCollision(BotInfo& botInfo, const ActionItem& actionItem);
     QVector<LineSegment> getBotLineSegments(BotInfo& botInfo);
     bool lineSegmentHasCollisionWithLineSegments(const CollisionDetector& collisionDetector, const LineSegment& a, const QVector<LineSegment>& lineSegments);
 
@@ -60,7 +60,7 @@ private:
     QMap<int, bool> m_BottleBotMap;
     QMap<int, bool> m_TesttubeBotMap;
     QMap<int, bool> m_WallCollisionBotMap;
-    QMap<int, int> m_PointsBotMap;
+    QMap<int, bool> m_ActionItemsCollisionBotMap;
 };
 
 #endif // GAME_H

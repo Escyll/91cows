@@ -16,4 +16,6 @@ public:
     static int nextId;
 };
 
+bool operator==(const ActionItem& lhs, const ActionItem& rhs);
+
 #endif // ACTIONITEM_H

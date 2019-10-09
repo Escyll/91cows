@@ -28,6 +28,9 @@ BotTrackingServiceSocket::BotTrackingServiceSocket()
                 auto right = 0.01666666666f*QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())).normalized();
                 auto forward = 0.01666666666f*QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())).normalized();
                 parsedBotInfo << BotInfo(arucoId,
+                                         "test",
+                                         0,
+                                         QColor(140, 40, 225),
                                          QPointF(position[0].toDouble(), 1 - position[1].toDouble()),
                                          forward,
                                          right);

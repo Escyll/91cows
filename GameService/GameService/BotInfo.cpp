@@ -3,8 +3,11 @@
 
 #include "BotInfo.h"
 
-BotInfo::BotInfo(int arucoId, const QPointF& location, const QVector2D& forward, const QVector2D& right)
+BotInfo::BotInfo(int arucoId, const QString& name, int score, const QColor& color, const QPointF& location, const QVector2D& forward, const QVector2D& right)
     : arucoId(arucoId)
+    , name(name)
+    , score(score)
+    , color(color)
     , location(location)
     , forward(forward)
     , right(right)

@@ -133,9 +133,9 @@ QJsonObject Game::getRevealedState()
     }
 //    if (m_tick % 30 == 0)
 //    {
-        auto last = m_actionItems.takeLast();
-        m_availableActionItemLocations << last.cellIndex;
-        placeActionItem(last.type);
+//        auto last = m_actionItems.takeLast();
+//        m_availableActionItemLocations << last.cellIndex;
+//        placeActionItem(last.type);
 //    }
 
     jsonState["actionItems"] = actionItemsArray;
@@ -229,6 +229,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                         {
                             return true;
                         }
+                        break;
                     }
                     case MazeCell::Side::Bottom:
                     {
@@ -237,6 +238,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                         {
                             return true;
                         }
+                        break;
                     }
                     case MazeCell::Side::Right:
                     {
@@ -245,6 +247,7 @@ bool Game::hasWallCollision(CollisionDetector& collisionDetector, double widthPe
                         {
                             return true;
                         }
+                        break;
                     }
                 }
             }
@@ -279,7 +282,7 @@ bool Game::hasCornerWallCollision(CollisionDetector& collisionDetector, double x
         cornerBottomRightToTopWall, cornerBottomRightToLeftWall
     };
 
-    for (auto cornerLineSegment : cornerLineSegments)
+    for (const auto& cornerLineSegment : cornerLineSegments)
     {
         if (lineSegmentHasCollisionWithLineSegments(collisionDetector, cornerLineSegment, botLineSegments))
         {
@@ -393,7 +396,7 @@ void Game::handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem)
 
 }
 
-bool Game::lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments)
+bool Game::lineSegmentHasCollisionWithLineSegments(const CollisionDetector& collisionDetector, const LineSegment& a, const QVector<LineSegment>& lineSegments)
 {
     for (auto lineSegment : lineSegments)
     {

@@ -9,6 +9,7 @@
 class LineSegment
 {
 public:
+    LineSegment() = default;
     LineSegment(const QPointF& p1, const QPointF& p2);
 
     QPointF p1, p2;

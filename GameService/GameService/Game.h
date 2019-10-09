@@ -47,7 +47,7 @@ private:
     bool hasActionItemCollition(CollisionDetector& collisionDetector, double widthPerCell, double heightPerCell, QVector<LineSegment> botLineSegments, ActionItem& collideActionItem);
     void handleActionItemCollision(BotInfo& botInfo, ActionItem& actionItem);
     QVector<LineSegment> getBotLineSegments(BotInfo& botInfo);
-    bool lineSegmentHasCollisionWithLineSegments(CollisionDetector& collisionDetector, LineSegment& a, QVector<LineSegment> lineSegments);
+    bool lineSegmentHasCollisionWithLineSegments(const CollisionDetector& collisionDetector, const LineSegment& a, const QVector<LineSegment>& lineSegments);
 
 private:
     State m_state = State::Stopped;

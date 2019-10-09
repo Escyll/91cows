@@ -25,8 +25,8 @@ BotTrackingServiceSocket::BotTrackingServiceSocket()
                 auto xorient = robotObject["xorient"].toArray();
                 auto yorient = robotObject["yorient"].toArray();
 
-                auto right = 0.025f*QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())).normalized();
-                auto forward = 0.025f*QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())).normalized();
+                auto right = 0.01666666666f*QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())).normalized();
+                auto forward = 0.01666666666f*QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())).normalized();
                 parsedBotInfo << BotInfo(arucoId,
                                          QPointF(position[0].toDouble(), 1 - position[1].toDouble()),
                                          forward,

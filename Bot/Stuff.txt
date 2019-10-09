@@ -1,24 +1,28 @@
 Hardware:
-- bluetooth module HC-05
-- arduino
-- USB cable
+- 1x arduino
+- 1x USB cable
 - 2x stepper motor
-- 2x motor driver
 - 2x wheels
 
 3D printed parts:
 - 1x Printed Model
 - 1x printed battery holder
 - 1x armarker holder
+- 1x ball wheel
 
 Bolts and stuff:
 - ArUco marker
-- 9x M3 16mm
-- 4x M3 25mm
-- 21x M3 bolts
+- 5x M3 16mm
+- 4x M3 20mm
+- 5x M3 25mm
+- 23x M3 bolts
 - 4x AAA batteries
 
 Sioux:
 - 1x Sioux arduino shield
+    - 1x bluetooth module HC-05
+    - 2x motor driver
+    - 1x on/off switch
+    - 1x push button
 - 1x battery connector
-- cablebinder
+- 1x small piece of cablebinder

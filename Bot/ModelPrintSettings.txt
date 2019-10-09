@@ -1,0 +1,22 @@
+All bots are printed with 0.35mm layer height [FAST]
+
+Bot core model
+    - stl file:             Prototype1
+    - support settings:     only from build plate
+    - estimated print time: 7h
+
+Battery holder add-on
+    - stl file:             BatterypackAddon
+    - support settings:     everywhere
+    - estimated print time: 1h30m
+
+AR marker add-on
+    - stl file:             ArMarkerBatterypackConnector
+    - support settings:     everywhere
+    - rotation y-axis:      180 (this to put the large flat part on the printbed)
+    - estimated print time: 1h30m
+
+Ball wheel:
+    - stl file:             BallWheel
+    - support settings:     only from build plate
+    - estimated print time: 45m

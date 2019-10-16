@@ -1,7 +1,7 @@
 import numpy as np
 
 g_fps = 10
-g_source = 1
+g_source = 0
 g_calibration_preview_window = "Camera Calibration Preview Window"
 g_calibration_progress_window = "Camera Calibration Progress Window"
 g_tracker_live_window = "Live Aruco Tracker"

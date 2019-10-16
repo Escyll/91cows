@@ -16,7 +16,7 @@ class FieldSetter(object):
         self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
-                gc.g_field_selection_live_window, cv2.WINDOW_AUTOSIZE)
+                gc.g_field_selection_live_window, cv2.WINDOW_NORMAL)
         cv2.setMouseCallback(
             gc.g_field_selection_live_window, self.__shape_selection)
 

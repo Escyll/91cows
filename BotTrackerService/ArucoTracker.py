@@ -29,7 +29,7 @@ class ArucoTracker(object):
         self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
-                gc.g_tracker_live_window, cv2.WINDOW_AUTOSIZE)
+                gc.g_tracker_live_window, cv2.WINDOW_NORMAL)
 
     def __stop_aruco_tracking(self):
         print("Exiting Application")
@@ -103,7 +103,7 @@ class ArucoTracker(object):
                 for i in range(0, ids.size):
                     cv2.aruco.drawAxis(frame, self.__camera_matrix,
                                        self.__dist_matrix, rvec[i],
-                                       tvec[i], gc.g_visible_axes_length)
+                                       tvec[i], gc.g_visible_axes_len)
                     imgpts, _ = cv2.projectPoints(gc.g_axis, rvec[i], tvec[i],
                                                   self.__camera_matrix,
                                                   self.__dist_matrix)

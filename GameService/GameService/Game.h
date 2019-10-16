@@ -1,9 +1,13 @@
 // Copyright (c) 2019 by Phenom-World B.V.
 // All rights reserved. This file includes confidential and proprietary information of Phenom-World B.V.
 
+#ifndef GAME_H
+#define GAME_H
+
 #include "ActionItem.h"
 #include "BotInfo.h"
 #include "GameOptions.h"
+#include "TeamSettings.h"
 #include <CollisionDetector.h>
 
 #include <Maze.h>
@@ -11,18 +15,15 @@
 #include <QMap>
 #include <QVector2D>
 
-#ifndef GAME_H
-#define GAME_H
-
 class Game
 {
 public:
     Game();
     Game(GameOptions options);
     enum class State {
-        Waiting,
-        Running,
-        Stopped
+        Waiting = 0,
+        Running = 1,
+        Stopped = 2
     };
     void handleTick();
     void start();

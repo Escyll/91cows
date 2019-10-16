@@ -26,6 +26,7 @@ public:
                                 int testTubes);
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void stopGame();
+    Q_INVOKABLE void registerTeam(int arucoId, const QString& teamName, const QColor& color);
 
 private:
     QSharedPointer<MessageMediator> m_messageMediator;

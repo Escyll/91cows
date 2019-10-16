@@ -55,3 +55,12 @@ void RemoteController::stopGame()
         m_messageMediator->sendMessage(command.toJson());
     }
 }
+
+void RemoteController::registerTeam(int arucoId, const QString& teamName, const QColor& color)
+{
+    if (m_messageMediator)
+    {
+        RegisterTeamCommand command{arucoId, teamName, color};
+        m_messageMediator->sendMessage(command.toJson());
+    }
+}

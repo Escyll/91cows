@@ -199,7 +199,14 @@ ApplicationWindow {
             Spacer {}
             Button {
                 text: "Register"
-                onClicked: {}
+                onClicked: {
+                    console.log("clicked")
+                    var arucoId = Number(arucoIdTextField.text)
+                    if (!isNaN(arucoId)) {
+                        console.log("check")
+                        remoteController.registerTeam(arucoId, teamNameTextField.text, colorDialog.color)
+                    }
+                }
             }
         }
     }

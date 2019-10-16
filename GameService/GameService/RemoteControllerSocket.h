@@ -4,6 +4,8 @@
 #ifndef REMOTECONTROLLERSOCKET_H
 #define REMOTECONTROLLERSOCKET_H
 
+#include "TeamSettings.h"
+
 #include <GameOptions.h>
 #include <MessageMediator.h>
 #include <QHostAddress>
@@ -14,7 +16,7 @@ class RemoteControllerSocket : public QObject
 {
     Q_OBJECT
 public:
-    RemoteControllerSocket();
+    RemoteControllerSocket(TeamSettings& teamSettings);
     bool listen(const QHostAddress& address = QHostAddress::Any, unsigned short port = 0);
 
 signals:
@@ -28,6 +30,7 @@ private:
 private:
     QSharedPointer<MessageMediator> m_mediator;
     QTcpServer m_remoteControllerTcpServer;
+    TeamSettings& m_teamSettings;
 };
 
 #endif // REMOTECONTROLLERSOCKET_H

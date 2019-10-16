@@ -7,7 +7,8 @@
 #include <QJsonDocument>
 #include <RemoteControllerCommands.h>
 
-RemoteControllerSocket::RemoteControllerSocket()
+RemoteControllerSocket::RemoteControllerSocket(TeamSettings& teamSettings)
+    : m_teamSettings(teamSettings)
 {
     QObject::connect(&m_remoteControllerTcpServer, &QTcpServer::newConnection, this, [this]
     {
@@ -44,6 +45,11 @@ void RemoteControllerSocket::parseCommand(const QJsonObject& command) const
     if (commandType == StopGameCommand::commandType)
     {
         emit stopGame();
+    }
+    if (commandType == RegisterTeamCommand::commandType)
+    {
+        auto registerTeamCommand = RegisterTeamCommand::fromJson(command);
+        m_teamSettings.registerTeam(registerTeamCommand.arucoId, registerTeamCommand.teamName, registerTeamCommand.color);
     }
 }
 

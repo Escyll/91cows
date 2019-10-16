@@ -6,6 +6,8 @@
 
 #include "GameOptions.h"
 
+#include <QColor>
+
 class CreateGameCommand
 {
 public:
@@ -30,6 +32,19 @@ public:
     static const QString commandType;
 
     QJsonObject toJson();
+};
+
+class RegisterTeamCommand
+{
+public:
+    static const QString commandType;
+
+    QJsonObject toJson();
+    static RegisterTeamCommand fromJson(const QJsonObject& json);
+
+    int arucoId;
+    QString teamName;
+    QColor color;
 };
 
 #endif // REMOTECONTROLLERCOMMANDS_H

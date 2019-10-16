@@ -14,22 +14,17 @@ GameRunner::GameRunner(QObject *parent)
 void GameRunner::createNewGame(const GameOptions& gameOptions)
 {
     m_game = Game(gameOptions);
+    m_timerId = startTimer(100);
 }
 
 void GameRunner::startGame()
 {
-    m_timerId = startTimer(100);
     m_game.start();
 }
 
 void GameRunner::stopGame()
 {
-    if (m_timerId != -1)
-    {
-        killTimer(m_timerId);
-        m_game.stop();
-        m_timerId = -1;
-    }
+    m_game.stop();
 }
 
 void GameRunner::setBotLocations(const QVector<BotInfo>& botLocations)

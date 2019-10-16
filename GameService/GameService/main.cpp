@@ -12,9 +12,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    BotTrackingServiceSocket botTrackingServiceSocket;
+    TeamSettings teamSettings;
+    BotTrackingServiceSocket botTrackingServiceSocket(teamSettings);
     BotClientSockets botClientSockets;
-    RemoteControllerSocket remoteControllerSocket;
+    RemoteControllerSocket remoteControllerSocket(teamSettings);
     VisualizationSocket visualizationSocket;
 
     if (botTrackingServiceSocket.listen(QHostAddress::Any, static_cast<quint16>(9635)))

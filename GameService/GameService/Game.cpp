@@ -12,10 +12,12 @@
 
 Game::Game()
 {
+    m_tick = 0;
 }
 
 Game::Game(GameOptions options)
 {
+    m_tick = 0;
     BacktrackMazeGenerator generator;
     MazePostProcessing postProcessor;
     m_maze = generator.generateMaze(options.mazeSize);
@@ -64,7 +66,6 @@ void Game::handleTick()
 
 void Game::start()
 {
-    m_tick = 0;
     m_bots.clear();
     m_state = State::Running;
 }
@@ -74,19 +75,21 @@ void Game::stop()
     m_state = State::Stopped;
 }
 
-void Game::setBotLocations(const QVector<BotInfo>& botLocations)
+void Game::setBotLocations(const QVector<BotInfo>& bots)
 {
-    for (auto botLocation : botLocations)
+    for (auto bot : bots)
     {
-        if (!m_bots.contains(botLocation.arucoId))
+        if (!m_bots.contains(bot.arucoId))
         {
-            m_bots[botLocation.arucoId] = botLocation;
+            m_bots[bot.arucoId] = bot;
         }
         else
         {
-            m_bots[botLocation.arucoId].location = botLocation.location;
-            m_bots[botLocation.arucoId].forward = botLocation.forward;
-            m_bots[botLocation.arucoId].right = botLocation.right;
+            m_bots[bot.arucoId].color = bot.color;
+            m_bots[bot.arucoId].name = bot.name;
+            m_bots[bot.arucoId].location = bot.location;
+            m_bots[bot.arucoId].forward = bot.forward;
+            m_bots[bot.arucoId].right = bot.right;
         }
     }
 }
@@ -112,9 +115,7 @@ QJsonArray Game::getBotJsonArray()
 void Game::insertSharedGameState(QJsonObject& jsonState)
 {
     jsonState["gameId"] =  1;
-    jsonState["gameState"] = m_state == State::Waiting ? "waiting"
-                                                       : m_state == State::Running ? "running"
-                                                                                   : "stopped";
+    jsonState["gameState"] = static_cast<int>(m_state);
     jsonState["gameTick"] = m_tick;
     jsonState["rows"] = m_maze.getLayout().width();
     jsonState["columns"] = m_maze.getLayout().height();
@@ -126,6 +127,19 @@ QJsonObject Game::getObscuredState()
 {
     QJsonObject jsonState;
     insertSharedGameState(jsonState);
+    QJsonArray actionItemsArray;
+    for (auto actionItem : m_actionItems)
+    {
+        if (actionItem.type == GameOptions::ActionItemType::EmptyChest || actionItem.type == GameOptions::ActionItemType::MimicChest)
+        {
+            actionItem.type = GameOptions::ActionItemType::TreasureChest;
+        }
+        actionItemsArray << QJsonObject{{"type", GameOptions::actionItemTypeToString(actionItem.type)},
+                                        {"x", actionItem.location.x()},
+                                        {"y", actionItem.location.y()},
+                                        {"id", actionItem.id}};
+    }
+    jsonState["actionItems"] = actionItemsArray;
     return jsonState;
 }
 
@@ -141,7 +155,6 @@ QJsonObject Game::getRevealedState()
                                         {"y", actionItem.location.y()},
                                         {"id", actionItem.id}};
     }
-
     jsonState["actionItems"] = actionItemsArray;
     return jsonState;
 }

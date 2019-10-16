@@ -9,7 +9,8 @@
 #include <QJsonObject>
 #include <QtGlobal>
 
-BotTrackingServiceSocket::BotTrackingServiceSocket()
+BotTrackingServiceSocket::BotTrackingServiceSocket(TeamSettings& teamSettings)
+    : m_teamSettings(teamSettings)
 {
     QObject::connect(&m_botTrackingTcpServer, &QTcpServer::newConnection, this, [this]()
     {
@@ -28,9 +29,9 @@ BotTrackingServiceSocket::BotTrackingServiceSocket()
                 auto right = 0.01666666666f*QVector2D(static_cast<float>(xorient[0].toDouble()), static_cast<float>(-xorient[1].toDouble())).normalized();
                 auto forward = 0.01666666666f*QVector2D(static_cast<float>(yorient[0].toDouble()), static_cast<float>(-yorient[1].toDouble())).normalized();
                 parsedBotInfo << BotInfo(arucoId,
-                                         "test",
+                                         m_teamSettings.teamNameMap.contains(arucoId) ? m_teamSettings.teamNameMap[arucoId] : "unregistered",
                                          0,
-                                         QColor(140, 40, 225),
+                                         m_teamSettings.colorMap.contains(arucoId) ? m_teamSettings.colorMap[arucoId] : QColor(140, 40, 225),
                                          QPointF(position[0].toDouble(), 1 - position[1].toDouble()),
                                          forward,
                                          right);

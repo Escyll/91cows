@@ -6,6 +6,7 @@
 
 #include "BotInfo.h"
 #include "MessageMediator.h"
+#include "TeamSettings.h"
 
 #include <QScopedPointer>
 #include <QTcpServer>
@@ -14,7 +15,7 @@ class BotTrackingServiceSocket : public QObject
 {
     Q_OBJECT
 public:
-    BotTrackingServiceSocket();
+    BotTrackingServiceSocket(TeamSettings& teamSettings);
     bool listen(const QHostAddress& address = QHostAddress::Any, unsigned short port = 0);
 
 signals:
@@ -23,6 +24,7 @@ signals:
 private:
     QSharedPointer<MessageMediator> m_mediator;
     QTcpServer m_botTrackingTcpServer;
+    TeamSettings& m_teamSettings;
 };
 
 #endif // BOTTRACKINGSERVICESOCKET_H

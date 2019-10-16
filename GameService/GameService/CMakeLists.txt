@@ -17,6 +17,7 @@ set(SOURCES
     Game.cpp
     RemoteControllerSocket.cpp
     VisualizationSocket.cpp
+    TeamSettings.cpp
 )
 
 set(HEADERS
@@ -28,6 +29,7 @@ set(HEADERS
     Game.h
     RemoteControllerSocket.h
     VisualizationSocket.h
+    TeamSettings.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

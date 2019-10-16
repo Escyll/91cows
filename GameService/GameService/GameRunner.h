@@ -5,6 +5,7 @@
 #define GAMERUNNER_H
 
 #include "Game.h"
+#include "TeamSettings.h"
 
 #include <QObject>
 

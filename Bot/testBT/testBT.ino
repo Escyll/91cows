@@ -33,8 +33,8 @@ void setup() {
   Bluetooth.begin(9600);
 
   // Set up the Serial connection can be used for debugging
-  Serial.begin(9600);
-  Serial.println("Waiting for command...");
+  // Serial.begin(9600);
+  // Serial.println("Waiting for command...");
 
   // Print the commands to Bleutooth serial to be used on a Phone
   // (for example https://play.google.com/store/apps/details?id=de.kai_morich.serial_bluetooth_terminal&hl=en_US)
@@ -55,7 +55,7 @@ void loop() {
   if (Bluetooth.available()) {
     char character = Bluetooth.read();
     
-    if(character == '\n'){
+    if(character == '\r'){
       DataReceived = true;
       PrintToSerials("Command received");
       Input[CurrentIndex] = 0;
@@ -131,8 +131,8 @@ void Stop(){
 void MoveForward(int distance){
   PrintToSerials("Forward: " + String(distance));
   
-  rightStepper.setRpm(24);
-  leftStepper.setRpm(24);
+  rightStepper.setRpm(48);
+  leftStepper.setRpm(48);
   rightStepper.newMoveCW(4096 * distance);
   leftStepper.newMoveCCW(4096 * distance);
 
@@ -142,8 +142,8 @@ void MoveForward(int distance){
 void MoveBackward(int distance){
   PrintToSerials("Backward: " + String(distance));
   
-  rightStepper.setRpm(24);
-  leftStepper.setRpm(24);
+  rightStepper.setRpm(48);
+  leftStepper.setRpm(48);
   rightStepper.newMoveCCW(4096 * distance);
   leftStepper.newMoveCW(4096 * distance);
 
@@ -173,6 +173,6 @@ void RotateCounterClockwise(int angle){
 }
 
 void PrintToSerials(String message){
-    Serial.println(message);    
+    // Serial.println(message);    
     Bluetooth.println(message);
 }

@@ -53,6 +53,7 @@ private:
 private:
     State m_state = State::Stopped;
     int m_tick = 0;
+    static int m_gameId;
     Maze m_maze;
     QMap<int, BotInfo> m_bots;
     QVector<ActionItem> m_actionItems;

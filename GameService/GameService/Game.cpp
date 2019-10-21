@@ -10,14 +10,19 @@
 #include <QDebug>
 #include <QRandomGenerator>
 
+int Game::m_gameId = 0;
+
 Game::Game()
 {
     m_tick = 0;
+    m_bots.clear();
 }
 
 Game::Game(GameOptions options)
 {
+    m_bots.clear();
     m_tick = 0;
+    ++m_gameId;
     BacktrackMazeGenerator generator;
     MazePostProcessing postProcessor;
     m_maze = generator.generateMaze(options.mazeSize);
@@ -65,8 +70,7 @@ void Game::handleTick()
 }
 
 void Game::start()
-{
-    m_bots.clear();
+{ 
     m_state = State::Running;
 }
 
@@ -81,7 +85,10 @@ void Game::setBotLocations(const QVector<BotInfo>& bots)
     {
         if (!m_bots.contains(bot.arucoId))
         {
-            m_bots[bot.arucoId] = bot;
+            if (m_state == State::Waiting)
+            {
+                m_bots[bot.arucoId] = bot;
+            }
         }
         else
         {
@@ -114,7 +121,7 @@ QJsonArray Game::getBotJsonArray()
 
 void Game::insertSharedGameState(QJsonObject& jsonState)
 {
-    jsonState["gameId"] =  1;
+    jsonState["gameId"] =  m_gameId;
     jsonState["gameState"] = static_cast<int>(m_state);
     jsonState["gameTick"] = m_tick;
     jsonState["rows"] = m_maze.getLayout().width();
@@ -365,7 +372,7 @@ void Game::handleActionItemCollision(BotInfo& botInfo, const ActionItem& actionI
     {
         case GameOptions::ActionItemType::Coin:
         {
-            botInfo.score++;
+            botInfo.score += 2;
             break;
         }
         case GameOptions::ActionItemType::Bottle:

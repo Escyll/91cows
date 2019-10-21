@@ -194,11 +194,15 @@ void Game::handleGameLoopPerBotInfo(CollisionDetector& collisionDetector, double
     ActionItem collideActionItem;
     if (hasActionItemCollition(collisionDetector, widthPerCell, heightPerCell, botLineSegments, collideActionItem))
     {
-        if (!m_TesttubeBotMap.contains(botInfo.arucoId) || collideActionItem.type != GameOptions::ActionItemType::SpikeTrap)
+        if (collideActionItem.type != GameOptions::ActionItemType::SpikeTrap || !m_TesttubeBotMap.contains(botInfo.arucoId))
         {
             handleActionItemCollision(botInfo, collideActionItem);
         }
-        m_ActionItemsCollisionBotMap[botInfo.arucoId] = true;
+
+        if (collideActionItem.type == GameOptions::ActionItemType::SpikeTrap)
+        {
+            m_ActionItemsCollisionBotMap[botInfo.arucoId] = true;
+        }
     }
     else if (m_ActionItemsCollisionBotMap.contains(botInfo.arucoId))
     {

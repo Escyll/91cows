@@ -6,8 +6,6 @@ export class BluetoothConnection {
     private readonly _channel: number;
 
     constructor(address: string, channel: number) {
-        // FIX: add precondition checks here
-
         this._address = address;
         this._channel = channel;
     }

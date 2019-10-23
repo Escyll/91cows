@@ -2,17 +2,18 @@ dependencies:
   '@microsoft/node-library-build': 6.0.49
   '@microsoft/rush-stack-compiler-3.3': 0.2.1
   '@rush-temp/build-typescript': 'file:projects/build-typescript.tgz'
+  '@rush-temp/control-localhost': 'file:projects/control-localhost.tgz'
   '@rush-temp/control-manual': 'file:projects/control-manual.tgz'
   '@rush-temp/shared-bluetooth': 'file:projects/shared-bluetooth.tgz'
-  '@types/inquirer': 6.5.0
   '@types/jest': 24.0.11
   '@types/node': 12.7.8
+  '@types/prompts': 2.0.1
   bluetooth-serial-port: 2.2.6
   dotenv: 8.1.0
   gulp: 4.0.0
-  inquirer: 6.5.1
   jest: 24.7.1
   prettier: 1.16.4
+  prompts: 2.2.1
   ts-jest: 24.0.2_jest@24.7.1
   tslint: 5.12.1_typescript@3.6.3
   tslint-config-prettier: 1.18.0
@@ -8390,6 +8391,24 @@ packages:
       integrity: sha512-dMFbf6knz+QQ4TQY4VUIIOZnshLvU6/z3cV5Xjmc+J7M2b7Qeuc5x7oKfiOcazTePYy+AGXg37IKbqFmvwF6mA==
       tarball: 'file:projects/build-typescript.tgz'
     version: 0.0.0
+  'file:projects/control-localhost.tgz':
+    dependencies:
+      '@types/jest': 24.0.11
+      '@types/node': 12.7.8
+      '@types/prompts': 2.0.1
+      dotenv: 8.1.0
+      jest: 24.7.1
+      prettier: 1.16.4
+      prompts: 2.2.1
+      ts-jest: 24.0.2_jest@24.7.1
+      tslint: 5.12.1_typescript@3.6.3
+      typescript: 3.6.3
+    dev: false
+    name: '@rush-temp/control-localhost'
+    resolution:
+      integrity: sha512-kr7gFji6lfkZu9R7L+NsdndChTKfzMllapqOpuiacRkNtHDKDwb9LB2RIuaMlB+g1XFjwg8Sd67k9A/eaec6YA==
+      tarball: 'file:projects/control-localhost.tgz'
+    version: 0.0.0
   'file:projects/control-manual.tgz':
     dependencies:
       '@types/inquirer': 6.5.0
@@ -8411,7 +8430,7 @@ packages:
     dev: false
     name: '@rush-temp/control-manual'
     resolution:
-      integrity: sha512-o0j1R36Lw+JQqNE+oChHa5Eb4xAPd40VnFjvQYF0Rk1RvPGF0B8Xuw0sh8wNYiF86fKcP6QolAXnCyA9qFnwWA==
+      integrity: sha512-wV8vg1mTrhsoSClkYkUWIpeqnJlOP1ZKNi0HCKd69GgGF5wdne/oeUYxQvm5Dglnb0UKJ0uD7KfVfnMDiTkh7Q==
       tarball: 'file:projects/control-manual.tgz'
     version: 0.0.0
   'file:projects/shared-bluetooth.tgz':
@@ -8435,17 +8454,18 @@ specifiers:
   '@microsoft/node-library-build': 6.0.49
   '@microsoft/rush-stack-compiler-3.3': 0.2.1
   '@rush-temp/build-typescript': 'file:./projects/build-typescript.tgz'
+  '@rush-temp/control-localhost': 'file:./projects/control-localhost.tgz'
   '@rush-temp/control-manual': 'file:./projects/control-manual.tgz'
   '@rush-temp/shared-bluetooth': 'file:./projects/shared-bluetooth.tgz'
-  '@types/inquirer': 6.5.0
   '@types/jest': 24.0.11
   '@types/node': 12.7.8
+  '@types/prompts': 2.0.1
   bluetooth-serial-port: 2.2.6
   dotenv: 8.1.0
   gulp: 4.0.0
-  inquirer: 6.5.1
   jest: 24.7.1
   prettier: 1.16.4
+  prompts: 2.2.1
   ts-jest: 24.0.2
   tslint: 5.12.1
   tslint-config-prettier: ^1.18.0

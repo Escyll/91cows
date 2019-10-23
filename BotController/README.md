@@ -7,10 +7,11 @@ layer of folders are the categories and the second layer contains the modules. T
 Rush configuration and common scripts; `control`contains control related modules that can be used to control
 the bot; and `shared` contains modules that can be shared among different `control` modules.
 
- | Module           | Description                                                                              |
- | ---------------- | ---------------------------------------------------------------------------------------- |
- | control-manual   | CLI application to control the bot and send commands.                                    |
- | shared-bluetooth | Abstraction layer to deal with the serial bluetooth connection and its discovery         |
+ | Module            | Description                                                                              |
+ | ----------------- | ---------------------------------------------------------------------------------------- |
+ | control-manual    | CLI application to control the bot and send commands.                                    |
+ | control-localhost | Local webserver which converts HTTP GET requests into commands to the bot.               |
+ | shared-bluetooth  | Abstraction layer to deal with the serial bluetooth connection and its discovery.        |
 
 # Bot Control
 
@@ -104,13 +105,14 @@ connected it will print the channel and address (store this for later use) and i
 command. This command allows you to see if the motors are correctly connected and which bot is connected to. If the
 bot move backwards, the motor connections should be swapped (so swap left and right connector on the shield).
 
-## Sending commands
+## Manual Control
 
-To control a robot using manual control, run the `rushx start` of the `control-manual` project. Important is that
-the correct environment file, named `.env` is present in the root of that project. An `example.env` is provided and
-contains the different configuration parameters.
+To control a robot using manual control, run the `rushx start` of the `control-manual` or the `control-localhost`
+project. Important is that the correct environment file, named `.env` is present in the root of each project. An
+`example.env` is provided and contains the different configuration parameters.
 
 In the rare case that you want to connect to multiple bots at the same time, the above command will not work. Instead
-you need to provide the environment variables via the command line. The command looks as follows and directly calls
-the compiled `basicControl.js`: `BOT_CHANNEL="1" BOT_ADDRESS="<>" node ./lib/basicControl`. The command needs to be run
-from the root directory of the `control-manual` project.
+you need to provide the environment variables via the command line. The example is given for the `control-manual`
+project: The command looks as follows and directly calls the compiled `basicControl.js`:
+`BOT_CHANNEL="1" BOT_ADDRESS="<>" node ./lib/basicControl`. The command needs to be run from the root directory of the
+`control-manual` project.

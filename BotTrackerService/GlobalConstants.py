@@ -1,7 +1,7 @@
 import numpy as np
 
 g_fps = 10
-g_source = 0
+g_source = 1
 g_calibration_preview_window = "Camera Calibration Preview Window"
 g_calibration_progress_window = "Camera Calibration Progress Window"
 g_tracker_live_window = "Live Aruco Tracker"
@@ -18,5 +18,5 @@ g_frame_height = 1080
 g_axis = np.float32([[0, 0, 0], [g_visible_axes_len, 0, 0],
                      [0, g_visible_axes_len, 0], [0, 0, g_visible_axes_len]])
 g_empty_com_data = []
-g_server_address = ('10.10.0.42', 9635)
+g_server_address = ('10.10.0.37', 9635)
 g_end_marker = '\n'

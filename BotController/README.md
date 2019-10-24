@@ -1,7 +1,7 @@
 
 # Folder Overview
 
-The folder is a Rush mono-repository. It contains a number of modules and is structered as follows: the first
+The folder is a Rush mono-repository. It contains a number of modules and is structured as follows: the first
 layer of folders are the categories and the second layer contains the modules. There are 4 categories, `build`,
 `common`, `control`, and `shared`, where `build` contains build and rush related modules; `common` contains
 Rush configuration and common scripts; `control`contains control related modules that can be used to control
@@ -97,6 +97,21 @@ Thanks to the node-gyp team, that is the case and they have documented it in the
 Using a PowerShell CLI instance with administrative privileges, and use the following code:
 `npm install --global --production windows-build-tools`. And that's it.
 
+### Manual Control
+
+To control a robot using manual control, run the `rushx start` of the `control-manual` or the `control-localhost`
+project. Important is that the correct environment file, named `.env` is present in the root of each project. An
+`example.env` is provided and contains the different configuration parameters.
+
+When starting the control for the first time, a bluetooth connection is made and Windows prompts to setup the device.
+When clicking on the prompt you need to provide the password and the bluetooth device is added to your devices.
+
+In the rare case that you want to connect to multiple bots at the same time, the above command will not work. Instead
+you need to provide the environment variables via the command line. The example is given for the `control-manual`
+project: The command looks as follows and directly calls the compiled `basicControl.js`:
+`BOT_CHANNEL="1" BOT_ADDRESS="<>" node ./lib/basicControl`. The command needs to be run from the root directory of the
+`control-manual` project.
+
 ### Finding a Bluetooth Connection
 
 To determine the address of the Bluetooth controller for you bot, run the `findConnection` in the `shared-bluetooth`
@@ -104,15 +119,3 @@ project. Just run `rushx start` of the `shared-bluetooth` project and it starts 
 connected it will print the channel and address (store this for later use) and it will send a "move forward 1"
 command. This command allows you to see if the motors are correctly connected and which bot is connected to. If the
 bot move backwards, the motor connections should be swapped (so swap left and right connector on the shield).
-
-## Manual Control
-
-To control a robot using manual control, run the `rushx start` of the `control-manual` or the `control-localhost`
-project. Important is that the correct environment file, named `.env` is present in the root of each project. An
-`example.env` is provided and contains the different configuration parameters.
-
-In the rare case that you want to connect to multiple bots at the same time, the above command will not work. Instead
-you need to provide the environment variables via the command line. The example is given for the `control-manual`
-project: The command looks as follows and directly calls the compiled `basicControl.js`:
-`BOT_CHANNEL="1" BOT_ADDRESS="<>" node ./lib/basicControl`. The command needs to be run from the root directory of the
-`control-manual` project.

@@ -27,9 +27,11 @@ class ArucoTracker(object):
         self.__cap = cv2.VideoCapture(gc.g_source)
         self.__cap.set(cv2.CAP_PROP_FRAME_WIDTH, gc.g_frame_width)
         self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
+        # self.__cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        # self.__cap.set(cv2.CAP_PROP_FOCUS, 0)
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
-                gc.g_tracker_live_window, cv2.WINDOW_NORMAL)
+                gc.g_tracker_live_window, cv2.WINDOW_AUTOSIZE)
 
     def __stop_aruco_tracking(self):
         print("Exiting Application")
@@ -83,7 +85,7 @@ class ArucoTracker(object):
     def __initialize_aruco_dict_and_params(self):
         self.__aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
         self.__parameters = cv2.aruco.DetectorParameters_create()
-        self.__parameters.adaptiveThreshConstant = 10
+        self.__parameters.adaptiveThreshConstant = 7
         self.__font = cv2.FONT_HERSHEY_SIMPLEX
 
     def track_aruco_markers(self):

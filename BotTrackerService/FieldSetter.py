@@ -14,9 +14,13 @@ class FieldSetter(object):
         self.__cap = cv2.VideoCapture(gc.g_source)
         self.__cap.set(cv2.CAP_PROP_FRAME_WIDTH, gc.g_frame_width)
         self.__cap.set(cv2.CAP_PROP_FRAME_HEIGHT, gc.g_frame_height)
+        # success = self.__cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        # print("Setting auto focus to false ", success)
+        # success = self.__cap.set(cv2.CAP_PROP_FOCUS, 0)
+        # print("Setting focus ", 0, success)
         if self.__visualization:
             self.__preview_window = cv2.namedWindow(
-                gc.g_field_selection_live_window, cv2.WINDOW_NORMAL)
+                gc.g_field_selection_live_window, cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback(
             gc.g_field_selection_live_window, self.__shape_selection)
 

@@ -64,6 +64,11 @@ void Game::handleTick()
 {
     if (m_state == State::Running)
     {
+        if (m_gameTimer->remainingTime() <= 0)
+        {
+            stop();
+            return;
+        }
         m_tick++;
         handleGameLoop();
     }
@@ -71,12 +76,31 @@ void Game::handleTick()
 
 void Game::start()
 { 
+    if (m_state == State::Waiting)
+    {
+        m_gameTimer = QSharedPointer<QTimer>::create();
+        m_gameTimer->setTimerType(Qt::PreciseTimer);
+        m_gameTimer->setSingleShot(true);
+        m_gameTimer->start(1000*10);
+    }
+    if (m_state == State::Stopped)
+    {
+        m_gameTimer->start(m_remainingTime);
+    }
     m_state = State::Running;
 }
 
 void Game::stop()
 {
     m_state = State::Stopped;
+    if (m_gameTimer)
+    {
+        if (m_gameTimer->remainingTime() > 0)
+        {
+            m_remainingTime = m_gameTimer->remainingTime();
+        }
+        m_gameTimer->stop();
+    }
 }
 
 void Game::setBotLocations(const QVector<BotInfo>& bots)

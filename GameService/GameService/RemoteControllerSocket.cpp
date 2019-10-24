@@ -20,7 +20,7 @@ RemoteControllerSocket::RemoteControllerSocket(TeamSettings& teamSettings)
         });
         QObject::connect(m_mediator.get(), &MessageMediator::disconnected, this, [this]
         {
-            m_mediator.reset();
+//            m_mediator.reset();
         });
     });
 }

@@ -13,6 +13,8 @@
 #include <Maze.h>
 #include <QJsonObject>
 #include <QMap>
+#include <QSharedPointer>
+#include <QTimer>
 #include <QVector2D>
 
 class Game
@@ -58,6 +60,8 @@ private:
     QMap<int, BotInfo> m_bots;
     QVector<ActionItem> m_actionItems;
     QVector<QPoint> m_availableActionItemLocations;
+    QSharedPointer<QTimer> m_gameTimer;
+    int m_remainingTime;
 
     QMap<int, bool> m_BottleBotMap;
     QMap<int, bool> m_TesttubeBotMap;

@@ -54,7 +54,7 @@ bots address and channel.
 
 ### Starting with the BotController
 
-1. Install Node.JS, version 10.15.3
+1. Install Node.JS, version > 12.10 (pick Node 12 LTS)
 2. `npm install -g @microsoft/rush`
 3. Install the following VSCode extensions:
     - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
@@ -89,13 +89,19 @@ bots address and channel.
 
     ```
 
-### Installing node-bluetooth
+### Installing bluetooth-serial-port
 
-The `node-bluetooth` package build requires the node-gyp package to build something natively on the platform.
+The `bluetooth-serial-port` package build requires the node-gyp package to build something natively on the platform.
 That package required Python 2.7 and a few other pieces too. Simple problems sometimes get simple solutions.
 Thanks to the node-gyp team, that is the case and they have documented it in the project README.
 Using a PowerShell CLI instance with administrative privileges, and use the following code:
-`npm install --global --production windows-build-tools`. And that's it.
+`npm install --global --production windows-build-tools`. And that's it. Sometime a restart is needed or an update to
+a later version of `node-gyp`.
+
+### Downloading packages and build the BotController
+
+To download all dependencies and link the modules developed in the repository, run `rush install`. Once that is
+successful run `rush build` to build all the modules in the BotController repository.
 
 ### Manual Control
 

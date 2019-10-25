@@ -54,7 +54,7 @@ bots address and channel.
 
 ### Starting with the BotController
 
-1. Install Node.JS, version 10.15.3
+1. Install Node.JS, version 12.13.0
 2. `npm install -g @microsoft/rush`
 3. Install the following VSCode extensions:
     - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)

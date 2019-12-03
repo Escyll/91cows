@@ -375,7 +375,7 @@ bool Game::hasActionItemCollition(const CollisionDetector& collisionDetector, do
                                   QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() + heightHalfActionItem));
         LineSegment rightActionItem(QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() + heightHalfActionItem),
                                   QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() - heightHalfActionItem));
-        LineSegment bottomActionItem(QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem),
+        LineSegment bottomActionItem(QPointF(actionItem.location.x() + widthHalfActionItem, actionItem.location.y() - heightHalfActionItem),
                                   QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem));
         LineSegment leftActionItem(QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() - heightHalfActionItem),
                                   QPointF(actionItem.location.x() - widthHalfActionItem, actionItem.location.y() + heightHalfActionItem));
